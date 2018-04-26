@@ -7,25 +7,68 @@
 //
 
 import UIKit
-
+import CoreData
 class ViewController: UIViewController {
 
+    var TransactionsArray = [Transaction]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
   
     
     //readCSV
-    
-    readDataFromCSVFile()
-    
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+    //readDataFromCSVFile()
+    loadItemsFromCoreData()
     
     }
+     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    func writeLineToCoreData(str:[String]) ->Bool{
-        print(str[0])
-        print(str[1])
-        print(str[2])
+    func loadItemsFromCoreData(){
+        
+        let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
+        do {
+        TransactionsArray = try context.fetch(request)
+        } catch {
+            print("error getting data")
+        }
+    }
+    
+    
+    func saveItemsToCoreData(str:[String]) ->Bool{
+        //print(str[0])
+        //print(str[1])
+        //print(str[2])
+        
+       
+       let newItem = Transaction(context: context)
+       
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
+        dateFormatter.dateFormat = "dd-MM-yy"
+        
+        
+        guard let date = dateFormatter.date(from: str[0]) else {
+            fatalError("ERROR: Date conversion failed due to mismatched format.")
+        }
+        
+        
+        newItem.time_attr = date
+        newItem.amount_attr=Float(str[1])!
+        newItem.type_attr=str[2]
+        
+        
+        
+       // Transaction
+        do{
+            try context.save()
+        }catch{
+            print("Error Saving context")
+        }
+        
+        
         
         return true
     }
@@ -45,10 +88,8 @@ class ViewController: UIViewController {
                 
                  for line in parsedCSV {
                   
-                    writeLineToCoreData(str:line)
-                   // for element in line{
-                     //   print(element)
-                   // }
+                    saveItemsToCoreData(str:line)
+                 
                 }
                 
                 
