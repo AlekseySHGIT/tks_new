@@ -8,8 +8,10 @@
 
 import UIKit
 import CoreData
-class ViewController: UIViewController {
-
+class TableViewController: UITableViewController {
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     var TransactionsArray = [Transaction]()
     
     override func viewDidLoad() {
@@ -19,20 +21,53 @@ class ViewController: UIViewController {
     
     //readCSV
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-    //readDataFromCSVFile()
+   readDataFromCSVFile()
     loadItemsFromCoreData()
     
     }
-     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return TransactionsArray.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Item",for:indexPath)
+        let item = TransactionsArray[indexPath.row]
+        
+        let date = NSDate()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dateString = dateFormatter.string(from:item.time_attr as! Date)
+        //print(dateString)
+        
+        
+        cell.textLabel?.text = dateString + "  -" + String(item.amount_attr) + " " + item.type_attr!
+        //cell.textLabel?.text = "-"+String(item.amount_attr)
+        return cell
+       
+    }
+    
+    
+    
+ 
     func loadItemsFromCoreData(){
         
         let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
+        
+        let sort = NSSortDescriptor(key: #keyPath(Transaction.time_attr), ascending: true)
+        request.sortDescriptors = [sort]
+        
+        
+        
         do {
         TransactionsArray = try context.fetch(request)
         } catch {
             print("error getting data")
         }
+        
+        
+        
+        
     }
     
     
@@ -87,17 +122,10 @@ class ViewController: UIViewController {
                // print(parsedCSV)
                 
                  for line in parsedCSV {
-                  
+
                     saveItemsToCoreData(str:line)
-                 
                 }
-                
-                
-                
-                
-                
-                
-                
+             
             }
             catch{
                 print("Contents could not be loaded.")
@@ -119,4 +147,5 @@ class ViewController: UIViewController {
 
 
 }
+
 
