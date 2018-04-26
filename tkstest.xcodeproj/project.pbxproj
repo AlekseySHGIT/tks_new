@@ -13,6 +13,7 @@
 		847B97602091D764005110E8 /* tkstest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 847B975E2091D764005110E8 /* tkstest.xcdatamodeld */; };
 		847B97622091D768005110E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 847B97612091D768005110E8 /* Assets.xcassets */; };
 		847B97652091D768005110E8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 847B97632091D768005110E8 /* LaunchScreen.storyboard */; };
+		847B976F2091DB61005110E8 /* FirstCSVTinkoff.csv in Resources */ = {isa = PBXBuildFile; fileRef = 847B976E2091DB61005110E8 /* FirstCSVTinkoff.csv */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		847B97612091D768005110E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		847B97642091D768005110E8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		847B97662091D768005110E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		847B976E2091DB61005110E8 /* FirstCSVTinkoff.csv */ = {isa = PBXFileReference; lastKnownFileType = text; name = FirstCSVTinkoff.csv; path = ../FirstCSVTinkoff.csv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +42,7 @@
 		847B974B2091D764005110E8 = {
 			isa = PBXGroup;
 			children = (
+				847B976E2091DB61005110E8 /* FirstCSVTinkoff.csv */,
 				847B97562091D764005110E8 /* tkstest */,
 				847B97552091D764005110E8 /* Products */,
 			);
@@ -125,6 +128,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				847B976F2091DB61005110E8 /* FirstCSVTinkoff.csv in Resources */,
 				847B97652091D768005110E8 /* LaunchScreen.storyboard in Resources */,
 				847B97622091D768005110E8 /* Assets.xcassets in Resources */,
 				847B975D2091D764005110E8 /* Main.storyboard in Resources */,
