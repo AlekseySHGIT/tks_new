@@ -21,7 +21,7 @@ class TableViewController: UITableViewController {
     
     //readCSV
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
- //  readDataFromCSVFile()
+ //readDataFromCSVFile()
     loadItemsFromCoreData()
     
     }
