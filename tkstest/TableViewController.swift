@@ -21,7 +21,7 @@ class TableViewController: UITableViewController {
     
     //readCSV
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-   readDataFromCSVFile()
+ //  readDataFromCSVFile()
     loadItemsFromCoreData()
     
     }
@@ -39,8 +39,7 @@ class TableViewController: UITableViewController {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateString = dateFormatter.string(from:item.time_attr as! Date)
         //print(dateString)
-        
-        
+       
         cell.textLabel?.text = dateString + "  -" + String(item.amount_attr) + " " + item.type_attr!
         //cell.textLabel?.text = "-"+String(item.amount_attr)
         return cell
@@ -76,7 +75,7 @@ class TableViewController: UITableViewController {
         //print(str[1])
         //print(str[2])
         
-       
+     
        let newItem = Transaction(context: context)
        
         let dateFormatter = DateFormatter()
@@ -112,17 +111,27 @@ class TableViewController: UITableViewController {
     func readDataFromCSVFile(){
         let fileName = "FirstCSVTinkoff"
         // let DocumentDirURL = try! FileManager.default.url(for: ., in: .userDomainMask, appropriateFor: nil, create: true)
-        if let filepath = Bundle.main.path(forResource: "FirstCSVTinkoff", ofType: "csv"){
+        if let filepath = Bundle.main.path(forResource: "FirstCSVTinkoff", ofType: "txt"){
             
             do{
                 let contents = try String(contentsOfFile: filepath)
-             //   print(contents)
+                print("CONTENT:")
+                //print(contents)
                 
-                let parsedCSV: [[String]] = contents.components(separatedBy: "\n").map{ $0.components(separatedBy: " ") }
+                let parsedCSV: [[String]] = contents.components(separatedBy: "\n").map{ $0.components(separatedBy: " ") }.filter{!$0.isEmpty}
+       
+                
                // print(parsedCSV)
                 
                  for line in parsedCSV {
-
+                    
+                    
+                    print(line)
+                   // if line.isEmpty {print("EMPTY LINE")}
+                    if line[0] == "" {print("EMPTY STRING")
+                     return
+                        
+                    }
                     saveItemsToCoreData(str:line)
                 }
              
