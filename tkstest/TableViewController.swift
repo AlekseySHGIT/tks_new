@@ -40,7 +40,14 @@ class TableViewController: UITableViewController {
         let dateString = dateFormatter.string(from:item.time_attr as! Date)
         //print(dateString)
        
-        cell.textLabel?.text = dateString + "  -" + String(item.amount_attr) + " " + item.type_attr!
+        print(item.type_attr)
+       var str = ""
+        if (item.type_attr == "Пополнение") {
+         str = " +"
+            
+        } else {str = " -"}
+        
+        cell.textLabel?.text = dateString + str + String(item.amount_attr) + " " + item.type_attr!
         //cell.textLabel?.text = "-"+String(item.amount_attr)
         return cell
        
