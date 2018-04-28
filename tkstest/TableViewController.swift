@@ -12,7 +12,8 @@ import CoreData
 struct Balance {
     var income_balance:Float = 0.00
     var outgoing_balance = -110562.11
-    var income_balance_date = "17.03.2013"
+    //  var income_balance_date = "17.03.2013"
+    var income_balance_date = DateComponents(year: 2013, month: 03, day: 17)
     var income_ammount = 15000.00
     var credit_limit:Float = 120000.00
     
@@ -30,7 +31,7 @@ class TableViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        balancefirstmonth = Balance(income_balance: 0.00, outgoing_balance: -110562.11, income_balance_date: "17.03.2013", income_ammount: 15000.00, credit_limit: 120000.00)
+        balancefirstmonth = Balance(income_balance: 0.00, outgoing_balance: -110562.11, income_balance_date: DateComponents(year: 2013, month: 03, day: 17), income_ammount: 15000.00, credit_limit: 120000.00)
         print(balancefirstmonth.credit_limit)
         
         //readCSV
@@ -92,8 +93,37 @@ class TableViewController: UITableViewController {
         
     }
     
-    func calculateProcent(){
+    
+    func GetDaysInMonth(balancedate: DateComponents) -> Int{
+        //let dateComponents = DateComponents(year:2013,month:03)
+        let calendar = Calendar.current
+        let date = calendar.date(from: balancedate)!
+        // balancedate.day
         
+        //17.03.2013
+        let range = calendar.range(of: .day, in: .month, for: date)!
+        let numDays = range.count
+        print(numDays)
+        print("!!!")
+        print(balancedate.day!)
+        return (numDays - balancedate.day!)
+        
+    }
+    
+    
+    func GetNextDate(currentDate : Date) -> Date  {
+        
+        let calendar = Calendar.current
+        //let datec1 = calendar.date(from: datec)
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to:currentDate)
+        print("NEWDAY:   \(tomorrow)")
+        return tomorrow!
+    }
+    
+    
+    
+    
+    func calculateProcent(){
         let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Procents")
         let request = NSBatchDeleteRequest(fetchRequest: fetch)
         do{
@@ -102,169 +132,168 @@ class TableViewController: UITableViewController {
             print("Error Clearing Procent Table")
         }
         
-        
-        
-        
-        
-        
         var currentBalance = balancefirstmonth.income_balance
+        var currentDate  = balancefirstmonth.income_balance_date
+      print(currentDate)
+        print("currentDate\(currentDate)")
+       // print("HERE DATE\(currentDate.date)")
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd--MM--yy"
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
         
-        /*
-         for t in 1..<count  {
-         if(AllTrati[t].mydate.compare(AllTrati[t-1].mydate) ==   .orderedSame){
-         AllTrati[t].price +=  AllTrati[t-1].price
-         AllTrati[t-1].price = 0
-         
-         }
-         */
+     //   let myDate = dateFormatter.date(from: currentDate)
         
-         for transaction_item in TransactionsArray{
-        let requestSearch: NSFetchRequest <Procents> = Procents.fetchRequest()
-          //  let predicate = NSPredicate(format: "timeattr CONTAINS[cd] %@", transaction_item.time_attr as! CVarArg)
+        
+        var current_period = GetDaysInMonth(balancedate:balancefirstmonth.income_balance_date)
+        // GetNextDate(datec: balancefirstmonth.income_balance_date)
+        var myData = Calendar.current.date(from: balancefirstmonth.income_balance_date)
+       print(myData)
+        print("Current Period \(current_period)")
+       
+        //currentDate.date
+        for _ in 0..<current_period {
+         myData = GetNextDate(currentDate: myData!)
+            
+        }
+        
+        
+        for transaction_item in TransactionsArray{
+            let requestSearch: NSFetchRequest <Procents> = Procents.fetchRequest()
+            //  let predicate = NSPredicate(format: "timeattr CONTAINS[cd] %@", transaction_item.time_attr as! CVarArg)
             let predicate = NSPredicate(format: "time_attr == %@", transaction_item.time_attr as! NSDate)
             
             requestSearch.predicate = predicate
             
             do {
-            foundProcentDataArray =  try context.fetch(requestSearch)
+                foundProcentDataArray =  try context.fetch(requestSearch)
                 print(foundProcentDataArray)
             } catch {
                 print("ERROR FETCHING DATA")
             }
-       
+            
             if ( foundProcentDataArray.count != 0){
                 print("Found same date in procent table")
-             //   foundProcentDataArray[0].time_attr
+                //   foundProcentDataArray[0].time_attr
                 
             } else {
-                 let procentItem = Procents(context: context)
+                let procentItem = Procents(context: context)
                 procentItem.time_attr = transaction_item.time_attr
-                 procentItem.total_debt_in = currentBalance - transaction_item.amount_attr
+                procentItem.total_debt_in = currentBalance - transaction_item.amount_attr
                 currentBalance = procentItem.total_debt_in
                 print("Put date to Procent Array")
             }
-        
-       
+            
+            
         }
-      
-    /*
-     for transaction_item in TransactionsArray{
-     //  transaction_item.total_debt_in = currentBalance -  transaction_item.amount_attr
-     
-     
-     let procentItem = Procents(context: context)
-     procentItem.time_attr = transaction_item.time_attr
-     // procentItem.total_debt_in = 1
-     procentItem.time_attr = transaction_item.time_attr
-     procentItem.total_debt_out = currentBalance - transaction_item.amount_attr
-     
-     */
-    
-    do{
-    try context.save()
-    }catch{
-    print("Error Saving context")
-    }
-    
-    
-    
-    
-
-
-
-
-}
-
-
-
-
-
-
-func saveItemsToCoreData(str:[String]) ->Bool{
-    //print(str[0])
-    //print(str[1])
-    //print(str[2])
-    
-    
-    let newItem = Transaction(context: context)
-    
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateStyle = .short
-    dateFormatter.timeStyle = .none
-    dateFormatter.dateFormat = "dd-MM-yy"
-    
-    
-    guard let date = dateFormatter.date(from: str[0]) else {
-        fatalError("ERROR: Date conversion failed due to mismatched format.")
-    }
-    
-    
-    newItem.time_attr = date
-    newItem.amount_attr=Float(str[1])!
-    newItem.type_attr=str[2]
-    
-    
-    
-    // Transaction
-    do{
-        try context.save()
-    }catch{
-        print("Error Saving context")
-    }
-    
-    
-    
-    return true
-}
-
-
-func readDataFromCSVFile(){
-    let fileName = "FirstCSVTinkoff"
-    // let DocumentDirURL = try! FileManager.default.url(for: ., in: .userDomainMask, appropriateFor: nil, create: true)
-    if let filepath = Bundle.main.path(forResource: "FirstCSVTinkoff", ofType: "txt"){
+        
+        /*
+         for transaction_item in TransactionsArray{
+         //  transaction_item.total_debt_in = currentBalance -  transaction_item.amount_attr
+         
+         
+         let procentItem = Procents(context: context)
+         procentItem.time_attr = transaction_item.time_attr
+         // procentItem.total_debt_in = 1
+         procentItem.time_attr = transaction_item.time_attr
+         procentItem.total_debt_out = currentBalance - transaction_item.amount_attr
+         
+         */
         
         do{
-            let contents = try String(contentsOfFile: filepath)
-            print("CONTENT:")
-            //print(contents)
+            try context.save()
+        }catch{
+            print("Error Saving context")
+        }
+        
+        
+    }
+    
+    func saveItemsToCoreData(str:[String]) ->Bool{
+        //print(str[0])
+        //print(str[1])
+        //print(str[2])
+        
+        
+        let newItem = Transaction(context: context)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
+        dateFormatter.dateFormat = "dd-MM-yy"
+        
+        
+        guard let date = dateFormatter.date(from: str[0]) else {
+            fatalError("ERROR: Date conversion failed due to mismatched format.")
+        }
+        
+        
+        newItem.time_attr = date
+        newItem.amount_attr=Float(str[1])!
+        newItem.type_attr=str[2]
+        
+        
+        
+        // Transaction
+        do{
+            try context.save()
+        }catch{
+            print("Error Saving context")
+        }
+        
+        
+        
+        return true
+    }
+    
+    
+    func readDataFromCSVFile(){
+        let fileName = "FirstCSVTinkoff"
+        // let DocumentDirURL = try! FileManager.default.url(for: ., in: .userDomainMask, appropriateFor: nil, create: true)
+        if let filepath = Bundle.main.path(forResource: "FirstCSVTinkoff", ofType: "txt"){
             
-            let parsedCSV: [[String]] = contents.components(separatedBy: "\n").map{ $0.components(separatedBy: " ") }.filter{!$0.isEmpty}
-            
-            
-            // print(parsedCSV)
-            
-            for line in parsedCSV {
+            do{
+                let contents = try String(contentsOfFile: filepath)
+                print("CONTENT:")
+                //print(contents)
+                
+                let parsedCSV: [[String]] = contents.components(separatedBy: "\n").map{ $0.components(separatedBy: " ") }.filter{!$0.isEmpty}
                 
                 
-                print(line)
-                // if line.isEmpty {print("EMPTY LINE")}
-                if line[0] == "" {print("EMPTY STRING")
-                    return
+                // print(parsedCSV)
+                
+                for line in parsedCSV {
                     
+                    
+                    print(line)
+                    // if line.isEmpty {print("EMPTY LINE")}
+                    if line[0] == "" {print("EMPTY STRING")
+                        return
+                        
+                    }
+                    saveItemsToCoreData(str:line)
                 }
-                saveItemsToCoreData(str:line)
+                
+            }
+            catch{
+                print("Contents could not be loaded.")
             }
             
         }
-        catch{
-            print("Contents could not be loaded.")
+        else{
+            print("FILENOTFOUND")
         }
         
-    }
-    else{
-        print("FILENOTFOUND")
+        
     }
     
     
-}
-
-
-override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-}
-
-
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    
 }
 
 
