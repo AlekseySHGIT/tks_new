@@ -168,6 +168,7 @@ class TableViewController: UITableViewController {
             //check if payment was for this day
             CheckPayment(currentDate: currentDate!,currentBalance: currentBalance)
             currentDate = GetNextDate(currentDate: currentDate!)
+            
         }
         
        
