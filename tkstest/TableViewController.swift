@@ -9,25 +9,11 @@
 import UIKit
 import CoreData
 
-/*
- dateFormatter.dateStyle = .short
- dateFormatter.timeStyle = .none
- dateFormatter.dateFormat = "dd-MM-yy"
- 
- 
- dateFormatter.locale = Locale(identifier: "ru_RU")
- dateFormatter.timeZone = TimeZone(identifier: "UTC")
- 
- 
- */
-
 
 struct Balance {
     var income_balance:Float = 0.00
     var outgoing_balance = -110562.11
-    //  var income_balance_date = "17.03.2013"
-    //var income_balance_date = DateComponents(year: 2013, month: 07, day: 17)
-  var income_balance_date = DateComponents(timeZone: .current, year: 2013, month: 07, day: 17)
+    var income_balance_date = DateComponents(timeZone: .current, year: 2013, month: 07, day: 17)
     var income_ammount = 15000.00
     var credit_limit:Float = 120000.00
     
@@ -40,20 +26,21 @@ class TableViewController: UITableViewController {
     var TransactionsArray = [Transaction]()
     var ProcentArray = [Procents]()
     var foundProcentDataArray = [Procents]()
-    var balancefirstmonth = Balance()
+    var BalanceForPeriod = Balance()
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
-        balancefirstmonth = Balance(income_balance: 0.00, outgoing_balance: -110562.11, income_balance_date: DateComponents(timeZone: TimeZone(abbreviation: "UTC") ,year: 2013, month: 07, day: 17), income_ammount: 15000.00, credit_limit: 120000.00)
-        print(balancefirstmonth.credit_limit)
         
-        //readCSV
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        BalanceForPeriod = Balance(income_balance: 0.00, outgoing_balance: -110562.11, income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 07, day: 17), income_ammount: 15000.00, credit_limit: 120000.00)
+        
+       
+        // print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+       
         readDataFromCSVFile()
         loadItemsFromCoreData()
         
     }
+   
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return TransactionsArray.count
@@ -67,9 +54,7 @@ class TableViewController: UITableViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateString = dateFormatter.string(from:item.time_attr as! Date)
-        //print(dateString)
-        
-    //    print(item.type_attr)
+      
         var str = ""
         if (item.type_attr == "Пополнение") {
             str = " +"
@@ -77,49 +62,31 @@ class TableViewController: UITableViewController {
         } else {str = " -"}
         
         cell.textLabel?.text = dateString + str + String(item.amount_attr) + " " + item.type_attr!
-        //cell.textLabel?.text = "-"+String(item.amount_attr)
+       
         return cell
         
     }
     
-    
-    
-    
+   
     func loadItemsFromCoreData(){
-      
+        
         let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
-        
-    //   let sort = NSSortDescriptor(key: #keyPath(Transaction.time_attr), ascending: true)
-      //  request.sortDescriptors = [sort]
-        
-        
-        
+          let sort = NSSortDescriptor(key: #keyPath(Transaction.time_attr), ascending: true)
+           request.sortDescriptors = [sort]
+       
         do {
-           TransactionsArray = try context.fetch(request)
-            print("TRANS_ARRAY")
+            TransactionsArray = try context.fetch(request)
           
-            
-            for transaction_item in TransactionsArray {
-                print("TRANS = \(transaction_item.time_attr)  \(transaction_item.amount_attr)")
-            }
-            
-            
-            
-            
             calculateProcent()
             
         } catch {
             print("error getting data")
         }
-        
-        
-        
-        
     }
     
     
     func GetDaysInMonth(balancedate: DateComponents) -> Int{
-     
+        
         let calendar = Calendar.current
         let date = calendar.date(from: balancedate)!
         let range = calendar.range(of: .day, in: .month, for: date)!
@@ -129,7 +96,7 @@ class TableViewController: UITableViewController {
     
     
     func GetNextDate(currentDate : Date) -> Date  {
-       
+        
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to:currentDate)
         return tomorrow!
     }
@@ -159,69 +126,26 @@ class TableViewController: UITableViewController {
     
     
     
-    func CheckPayment(currentDate1: Date,currentBalance:Float){
-      //dateFormatter.c
-        //currentDate1.dateF
-        
-        print("CurrentDate for Searh \(currentDate1)")
+    func CheckPayment(currentDate: Date,currentBalance:Float){
+       
         let requestSearch: NSFetchRequest <Transaction> = Transaction.fetchRequest()
-        
-        let predicate = NSPredicate(format: "time_attr == %@", currentDate1 as! NSDate)
+        let predicate = NSPredicate(format: "time_attr == %@", currentDate as! NSDate)
         
         requestSearch.predicate = predicate
-         var test = [Transaction]()
+        var test = [Transaction]()
         do {
-          
-        //    print("FOUND THIS DATE IN TRANSACTION ARRAY \(currentDate)")
             test =  try context.fetch(requestSearch)
-          print("TEST REQUEST")
-            print(test)
-            //  print(test)
-            
         } catch {
             print("ERROR FETCHING DATA")
         }
+        
         if ( test.count != 0){
-            print("FOUND THIS DATE \(currentDate1) IN TRANSACTION ARRAY\(test[0].time_attr) + \(test[0].amount_attr)")
+            print("This Date \(currentDate) IN transactionArray: \(test[0].time_attr) + \(test[0].amount_attr)")
         }
         else {
             print("NOT FOUND")
         }
-        
-        
-        /*
-        for transaction_item in TransactionsArray{
-            let requestSearch: NSFetchRequest <Procents> = Procents.fetchRequest()
-           
-            let predicate = NSPredicate(format: "time_attr == %@", currentDate as! NSDate)
-            
-            requestSearch.predicate = predicate
-            
-            do {
-                foundProcentDataArray =  try context.fetch(requestSearch)
-                
-            } catch {
-                print("ERROR FETCHING DATA")
-            }
-            
-            if ( foundProcentDataArray.count != 0){
-                print(foundProcentDataArray)
-                print("Found same date in procent table")
-                //   foundProcentDataArray[0].time_attr
-                
-            } else {
-             //   let procentItem = Procents(context: context)
-               // procentItem.time_attr = transaction_item.time_attr
-                //procentItem.total_debt_in = currentBalance - transaction_item.amount_attr
-              //  currentBalance = procentItem.total_debt_in
-                print("Put date to Procent Array")
-            }
-            
-            
-        }
-        
-        */
-        
+       
     }
     
     
@@ -229,67 +153,24 @@ class TableViewController: UITableViewController {
         
         clearProcentTable()
         
-        var currentBalance = balancefirstmonth.income_balance
-        //var currentDate  = balancefirstmonth.income_balance_date
-        var current_period = GetDaysInMonth(balancedate:balancefirstmonth.income_balance_date)
-        var currentDate = Calendar.current.date(from: balancefirstmonth.income_balance_date)
+        var currentBalance = BalanceForPeriod.income_balance
        
-      
-      //pochemu 17 chislo pishet a ne 18 srashu?
+        var current_period = GetDaysInMonth(balancedate:BalanceForPeriod.income_balance_date)
+        var currentDate = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
+        
+        
+        //pochemu 17 chislo pishet a ne 18 srashu? UTC nado delat
         for _ in 0..<current_period {
-           
+            
             let procentItem = Procents(context: context)
             procentItem.time_attr = currentDate
-            print("PROCENT_TIME\(procentItem.time_attr)")
-            //fill procent table with dates for all period
-            //check if payment was a this filled value
-            CheckPayment(currentDate1: currentDate!,currentBalance: currentBalance)
-             currentDate = GetNextDate(currentDate: currentDate!)
+            
+            //check if payment was for this day
+            CheckPayment(currentDate: currentDate!,currentBalance: currentBalance)
+            currentDate = GetNextDate(currentDate: currentDate!)
         }
         
-        /*
-        for transaction_item in TransactionsArray{
-            let requestSearch: NSFetchRequest <Procents> = Procents.fetchRequest()
-            //  let predicate = NSPredicate(format: "timeattr CONTAINS[cd] %@", transaction_item.time_attr as! CVarArg)
-            let predicate = NSPredicate(format: "time_attr == %@", transaction_item.time_attr as! NSDate)
-            
-            requestSearch.predicate = predicate
-            
-            do {
-                foundProcentDataArray =  try context.fetch(requestSearch)
-             //   print(foundProcentDataArray)
-            } catch {
-                print("ERROR FETCHING DATA")
-            }
-            
-            if ( foundProcentDataArray.count != 0){
-                print("Found same date in procent table")
-                //   foundProcentDataArray[0].time_attr
-                
-            } else {
-                let procentItem = Procents(context: context)
-                procentItem.time_attr = transaction_item.time_attr
-                procentItem.total_debt_in = currentBalance - transaction_item.amount_attr
-                currentBalance = procentItem.total_debt_in
-                print("Put date to Procent Array")
-            }
-            
-            
-        }
-        */
-        /*
-         for transaction_item in TransactionsArray{
-         //  transaction_item.total_debt_in = currentBalance -  transaction_item.amount_attr
-         
-         
-         let procentItem = Procents(context: context)
-         procentItem.time_attr = transaction_item.time_attr
-         // procentItem.total_debt_in = 1
-         procentItem.time_attr = transaction_item.time_attr
-         procentItem.total_debt_out = currentBalance - transaction_item.amount_attr
-         
-         */
-        
+       
         do{
             try context.save()
         }catch{
@@ -298,38 +179,25 @@ class TableViewController: UITableViewController {
         
         
     }
-     let dateFormatter = DateFormatter()
+    let dateFormatter = DateFormatter()
     
     func saveItemsToCoreData(str:[String]) ->Bool{
         //print(str[0])
-        //print(str[1])
-        //print(str[2])
-        
-        
+     
         let newItem = Transaction(context: context)
-        
-       
         dateFormatter.dateStyle = .short
         dateFormatter.timeStyle = .none
         dateFormatter.dateFormat = "dd-MM-yy"
-       
-       
         dateFormatter.locale = Locale(identifier: "ru_RU")
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        
-        
-        print(str[0])
-        
+       
         guard let date = dateFormatter.date(from: str[0]) else {
             fatalError("ERROR: Date conversion failed due to mismatched format.")
         }
         
-        
         newItem.time_attr = date
         newItem.amount_attr=Float(str[1])!
         newItem.type_attr=str[2]
-        
-        
         
         // Transaction
         do{
@@ -337,9 +205,7 @@ class TableViewController: UITableViewController {
         }catch{
             print("Error Saving context")
         }
-        
-        
-        
+       
         return true
     }
     
@@ -354,20 +220,11 @@ class TableViewController: UITableViewController {
             
             do{
                 let contents = try String(contentsOfFile: filepath)
-                print("CONTENT:")
-                //print(contents)
-                
                 let parsedCSV: [[String]] = contents.components(separatedBy: "\n").map{ $0.components(separatedBy: " ") }.filter{!$0.isEmpty}
-                
-                
-                // print(parsedCSV)
-                
                 for line in parsedCSV {
-                    
-                    
-                   print(line)
-                    // if line.isEmpty {print("EMPTY LINE")}
-                    if line[0] == "" {print("EMPTY STRING")
+
+                    if line[0] == "" {
+                        //print("EMPTY STRING")
                         return
                         
                     }
@@ -383,10 +240,6 @@ class TableViewController: UITableViewController {
         else{
             print("FILENOTFOUND")
         }
-        
-        //SEARCH FOR 2013-07-19
-        
-        
         
     }
     
