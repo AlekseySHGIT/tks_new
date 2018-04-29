@@ -67,7 +67,12 @@ class TableViewController: UITableViewController {
         
     }
     
-   
+    func CalculateProcents(){
+        
+        
+        
+    }
+    
     func loadItemsFromCoreData(){
         
         let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
@@ -77,7 +82,10 @@ class TableViewController: UITableViewController {
         do {
             TransactionsArray = try context.fetch(request)
           
-            calculateProcent()
+            FillProcentTableWithData()
+            
+           CalculateProcents()
+            
             
         } catch {
             print("error getting data")
@@ -99,6 +107,13 @@ class TableViewController: UITableViewController {
         
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to:currentDate)
         return tomorrow!
+    }
+    
+    
+    func GetPreviousDate(currentDate : Date) -> Date  {
+        
+        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to:currentDate)
+        return yesterday!
     }
     
     
@@ -250,11 +265,21 @@ class TableViewController: UITableViewController {
            print("Current Grace \(currentLocalGraceBalance)")
             procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
             procentItem.purchases_current_Grace = currentLocalGraceBalance
+            
+            //////
+            
+            
+            
+            
+            //////
+            
+            
+            
         return (currentLocalBalance,currentLocalNonPurchase_without_Grace_Balance,currentLocalGraceBalance)
     }
     
     
-    func calculateProcent(){
+    func FillProcentTableWithData(){
         
         clearProcentTable()
         
@@ -287,8 +312,15 @@ class TableViewController: UITableViewController {
             print("Error Saving context")
         }
         
+    
+        
+        
         
     }
+    
+    
+    
+    
     let dateFormatter = DateFormatter()
     
     func saveItemsToCoreData(str:[String]) ->Bool{
