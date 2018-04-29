@@ -16,7 +16,7 @@ struct Balance {
     var income_balance_date = DateComponents(timeZone: .current, year: 2013, month: 07, day: 17)
     var income_ammount = 15000.00
     var credit_limit:Float = 120000.00
-    
+    var service_charge:Float = 590
 }
 
 class TableViewController: UITableViewController {
@@ -31,7 +31,7 @@ class TableViewController: UITableViewController {
         super.viewDidLoad()
         
         
-        BalanceForPeriod = Balance(income_balance: 0.00, outgoing_balance: -110562.11, income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 07, day: 17), income_ammount: 15000.00, credit_limit: 120000.00)
+        BalanceForPeriod = Balance(income_balance: 0.00, outgoing_balance: -110562.11, income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 07, day: 17), income_ammount: 15000.00, credit_limit: 120000.00,service_charge:590)
         
        
         // print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
@@ -124,13 +124,21 @@ class TableViewController: UITableViewController {
     }
     
     
-    
-    
-    func CheckPayment(currentDate: Date,currentBalance:Float,currentNonPurchase_without_Grace_Balance:Float)
-        -> (currentLocalBalance:Float,currentLocalNonPurchase_without_Grace_Balance:Float){
-        var currentLocalNonPurchase_without_Grace_Balance = currentNonPurchase_without_Grace_Balance
+  
+      var firstPopolnenie = false
+    func CheckPayment(currentDate: Date,currentBalance:Float,currentNonPurchase_without_Grace_Balance:Float,currentGraceBalance:Float)
+        -> (currentLocalBalance:Float,currentLocalNonPurchase_without_Grace_Balance:Float,currentLocalGraceBalance:Float){
+        
+            
+            
+            var currentLocalNonPurchase_without_Grace_Balance = currentNonPurchase_without_Grace_Balance
         var currentLocalBalance = currentBalance
-        let procentItem = Procents(context: context)
+       
+           var  currentLocalGraceBalance = currentGraceBalance
+            
+            
+            
+            let procentItem = Procents(context: context)
         procentItem.time_attr = currentDate
         
         let requestSearch: NSFetchRequest <Transaction> = Transaction.fetchRequest()
@@ -176,11 +184,51 @@ class TableViewController: UITableViewController {
                  procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
                      currentLocalBalance = procentItem.total_debt_out
                     
+                    currentLocalGraceBalance = currentLocalGraceBalance +  transactionItem.amount_attr
+                     procentItem.purchases_current_Grace = currentLocalGraceBalance
                     
-                case "Пополнение\r":
+                    
+                    
+                case "Пополнение":
+                   
+                    
+                    if(!firstPopolnenie){
+                       print("FIRST")
+                        firstPopolnenie = true
+                        currentLocalGraceBalance = currentLocalGraceBalance +  BalanceForPeriod.service_charge
+                        procentItem.purchases_current_Grace = currentLocalGraceBalance
+                      
+                    }
+                    
                     print("FOUND Popolnenie")
+                    print(currentLocalBalance)
                     procentItem.total_debt_out = currentLocalBalance + transactionItem.amount_attr
                     currentLocalBalance = procentItem.total_debt_out
+                    print("AFTER")
+                    print(currentLocalBalance)
+                    
+                    currentLocalGraceBalance = currentLocalGraceBalance -  transactionItem.amount_attr
+                    procentItem.purchases_current_Grace = currentLocalGraceBalance
+                    
+                    
+                    
+                case "Пополнение\r":
+                    if(!firstPopolnenie){
+                      print("FIRST")
+                        firstPopolnenie = true
+                       
+                        currentLocalGraceBalance = currentLocalGraceBalance +  BalanceForPeriod.service_charge
+                        procentItem.purchases_current_Grace = currentLocalGraceBalance
+                        
+                        
+                    }
+                    
+                    print("FOUND Popolnenie")
+                    print(currentLocalBalance)
+                    procentItem.total_debt_out = currentLocalBalance + transactionItem.amount_attr
+                    currentLocalBalance = procentItem.total_debt_out
+                    print("AFTER")
+                    print(currentLocalBalance)
                 default:
                     print("No category found")
                 }
@@ -199,8 +247,10 @@ class TableViewController: UITableViewController {
         print("BALANCE: ")
         print(currentLocalBalance)
         print("nonpurchase_without_Grace \(currentLocalNonPurchase_without_Grace_Balance)")
-         procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
-        return (currentLocalBalance,currentLocalNonPurchase_without_Grace_Balance)
+           print("Current Grace \(currentLocalGraceBalance)")
+            procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
+            procentItem.purchases_current_Grace = currentLocalGraceBalance
+        return (currentLocalBalance,currentLocalNonPurchase_without_Grace_Balance,currentLocalGraceBalance)
     }
     
     
@@ -210,21 +260,22 @@ class TableViewController: UITableViewController {
         
         var currentBalance = BalanceForPeriod.income_balance
         var currentNonPurchase_without_Grace_Balance:Float = 0
+        var currentGraceBalance:Float = 0
         var current_period = GetDaysInMonth(balancedate:BalanceForPeriod.income_balance_date)
         var currentDate = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
         
         
         //pochemu 17 chislo pishet a ne 18 srashu? UTC nado delat
-        for _ in 0..<current_period {
+        for _ in 0..<current_period+20 {
             
-           
+            print("Proshet v etu datu: \(currentDate)")
             
             //check if payment was for this day
-            let current = CheckPayment(currentDate: currentDate!,currentBalance:  currentBalance, currentNonPurchase_without_Grace_Balance: currentNonPurchase_without_Grace_Balance)
+            let current = CheckPayment(currentDate: currentDate!,currentBalance:  currentBalance, currentNonPurchase_without_Grace_Balance: currentNonPurchase_without_Grace_Balance,currentGraceBalance: currentGraceBalance)
             
             currentBalance = current.currentLocalBalance
             currentNonPurchase_without_Grace_Balance = current.currentLocalNonPurchase_without_Grace_Balance
-         
+         currentGraceBalance = current.currentLocalGraceBalance
             currentDate = GetNextDate(currentDate: currentDate!)
             
         }
@@ -282,12 +333,12 @@ class TableViewController: UITableViewController {
                 let parsedCSV: [[String]] = contents.components(separatedBy: "\n").map{ $0.components(separatedBy: " ") }.filter{!$0.isEmpty}
                 for line in parsedCSV {
 
-                    if line[0] == "" {
+                    if line[0] != "" {
                         //print("EMPTY STRING")
-                        return
-                        
+                       
+                         saveItemsToCoreData(str:line)
                     }
-                    saveItemsToCoreData(str:line)
+                  
                 }
                 
             }
