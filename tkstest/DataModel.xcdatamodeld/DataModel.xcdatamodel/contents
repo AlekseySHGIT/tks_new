@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14133" systemVersion="17E199" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Procents" representedClassName="Procents" syncable="YES" codeGenerationType="class">
+        <attribute name="nonpurchase_without_Grace" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="time_attr" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="total_debt_in" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="total_debt_out" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
@@ -11,7 +12,7 @@
         <attribute name="type_attr" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Procents" positionX="-839" positionY="2466" width="128" height="105"/>
         <element name="Transaction" positionX="-1827" positionY="2351" width="495" height="88"/>
-        <element name="Procents" positionX="-839" positionY="2466" width="128" height="88"/>
     </elements>
 </model>

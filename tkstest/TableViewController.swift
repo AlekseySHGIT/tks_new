@@ -126,26 +126,81 @@ class TableViewController: UITableViewController {
     
     
     
-    func CheckPayment(currentDate: Date,currentBalance:Float){
-       
+    func CheckPayment(currentDate: Date,currentBalance:Float,currentNonPurchase_without_Grace_Balance:Float)
+        -> (currentLocalBalance:Float,currentLocalNonPurchase_without_Grace_Balance:Float){
+        var currentLocalNonPurchase_without_Grace_Balance = currentNonPurchase_without_Grace_Balance
+        var currentLocalBalance = currentBalance
+        let procentItem = Procents(context: context)
+        procentItem.time_attr = currentDate
+        
         let requestSearch: NSFetchRequest <Transaction> = Transaction.fetchRequest()
         let predicate = NSPredicate(format: "time_attr == %@", currentDate as! NSDate)
         
         requestSearch.predicate = predicate
-        var test = [Transaction]()
+        var transactionsFoundForThisDate = [Transaction]()
         do {
-            test =  try context.fetch(requestSearch)
+            transactionsFoundForThisDate =  try context.fetch(requestSearch)
         } catch {
             print("ERROR FETCHING DATA")
         }
         
-        if ( test.count != 0){
-            print("This Date \(currentDate) IN transactionArray: \(test[0].time_attr) + \(test[0].amount_attr)")
+        if ( transactionsFoundForThisDate.count != 0){
+            print("\(transactionsFoundForThisDate.count) transactions for this date: \(currentDate) IN transactionArray: \(transactionsFoundForThisDate[0].time_attr) + \(transactionsFoundForThisDate[0].amount_attr)")
+            for transactionItem in transactionsFoundForThisDate {
+                print("Transaction:: \(transactionItem.amount_attr)   \(transactionItem.type_attr)")
+            
+                switch transactionItem.type_attr {
+                case "Плата\r":
+                     print("FOUND PLATA")
+                  procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
+                currentLocalBalance = procentItem.total_debt_out
+                case "Выдача\r":
+                print("FOUND nalichnie vidashs")
+                     procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
+                     currentLocalBalance = procentItem.total_debt_out
+                    
+             
+                    currentLocalNonPurchase_without_Grace_Balance = currentLocalNonPurchase_without_Grace_Balance + transactionItem.amount_attr
+                         procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
+                    
+                case "Комиссия\r":
+                    print("FOUND komissia")
+                    procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
+                    currentLocalBalance = procentItem.total_debt_out
+                 
+                    currentLocalNonPurchase_without_Grace_Balance = currentLocalNonPurchase_without_Grace_Balance + transactionItem.amount_attr
+                    procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
+                    
+                case "Оплата\r":
+                    print("FOUND Oplata")
+                 procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
+                     currentLocalBalance = procentItem.total_debt_out
+                    
+                    
+                case "Пополнение\r":
+                    print("FOUND Popolnenie")
+                    procentItem.total_debt_out = currentLocalBalance + transactionItem.amount_attr
+                    currentLocalBalance = procentItem.total_debt_out
+                default:
+                    print("No category found")
+                }
+              
+            
+            
+            }
+          
+            
         }
         else {
-            print("NOT FOUND")
+            print("No transaction for date: \(currentDate)")
+             procentItem.total_debt_out = currentLocalBalance
+           
         }
-       
+        print("BALANCE: ")
+        print(currentLocalBalance)
+        print("nonpurchase_without_Grace \(currentLocalNonPurchase_without_Grace_Balance)")
+         procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
+        return (currentLocalBalance,currentLocalNonPurchase_without_Grace_Balance)
     }
     
     
@@ -154,7 +209,7 @@ class TableViewController: UITableViewController {
         clearProcentTable()
         
         var currentBalance = BalanceForPeriod.income_balance
-       
+        var currentNonPurchase_without_Grace_Balance:Float = 0
         var current_period = GetDaysInMonth(balancedate:BalanceForPeriod.income_balance_date)
         var currentDate = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
         
@@ -162,11 +217,14 @@ class TableViewController: UITableViewController {
         //pochemu 17 chislo pishet a ne 18 srashu? UTC nado delat
         for _ in 0..<current_period {
             
-            let procentItem = Procents(context: context)
-            procentItem.time_attr = currentDate
+           
             
             //check if payment was for this day
-            CheckPayment(currentDate: currentDate!,currentBalance: currentBalance)
+            let current = CheckPayment(currentDate: currentDate!,currentBalance:  currentBalance, currentNonPurchase_without_Grace_Balance: currentNonPurchase_without_Grace_Balance)
+            
+            currentBalance = current.currentLocalBalance
+            currentNonPurchase_without_Grace_Balance = current.currentLocalNonPurchase_without_Grace_Balance
+         
             currentDate = GetNextDate(currentDate: currentDate!)
             
         }
