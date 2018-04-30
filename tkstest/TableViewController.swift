@@ -11,12 +11,19 @@ import CoreData
 
 
 struct Balance {
-    var income_balance:Float = 0.00
+    var income_balance:Double = 0.00
     var outgoing_balance = -110562.11
-    var income_balance_date = DateComponents(timeZone: .current, year: 2013, month: 07, day: 17)
+    var income_balance_date = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 17)
+    var outcome_balance_date = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 24)
     var income_ammount = 15000.00
-    var credit_limit:Float = 120000.00
-    var service_charge:Float = 590
+    var credit_limit:Double = 120000.00
+    var service_charge:Double = 590
+    var data_min_payment = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 18)
+    var data_fist_payment = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20)
+    //сумма расходов
+    var amount_of_expenses:Double = 0
+    //сумма поступлений
+    var amount_of_receipts:Double = 0
 }
 
 class TableViewController: UITableViewController {
@@ -31,10 +38,29 @@ class TableViewController: UITableViewController {
         super.viewDidLoad()
         
         
-        BalanceForPeriod = Balance(income_balance: 0.00, outgoing_balance: -110562.11, income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 07, day: 17), income_ammount: 15000.00, credit_limit: 120000.00,service_charge:590)
+        
+        BalanceForPeriod = Balance(
+            income_balance: 0.00, outgoing_balance: -110562.11,
+            income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 07, day: 17),
+            outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 24),
+            income_ammount: 0,
+            credit_limit: 120000.00,
+            service_charge: 590,
+            data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 18),
+            data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+            amount_of_expenses: 0,
+            amount_of_receipts: 0)
+        
+        
+        //особый случай для самой первой покупки, подумать может быть ошибка для будущих
+        if(BalanceForPeriod.income_balance == 0.00 && (BalanceForPeriod.data_fist_payment.day! > BalanceForPeriod.income_balance_date.day!)){
+           BalanceForPeriod.outcome_balance_date = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 08, day: 24)
+        }
+        
+       // if(income_balance == 0.00 && )
         
        
-        // print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
        
         readDataFromCSVFile()
         loadItemsFromCoreData()
@@ -67,11 +93,7 @@ class TableViewController: UITableViewController {
         
     }
     
-    func CalculateProcents(){
-        
-        
-        
-    }
+  
     
     func loadItemsFromCoreData(){
         
@@ -102,6 +124,18 @@ class TableViewController: UITableViewController {
         return (numDays - balancedate.day!)
     }
     
+    
+    func GetDaysForPeriod(balance_incomedate: DateComponents,balance_outcomedate: DateComponents) -> Int{
+        
+        let calendar = Calendar.current
+        let date1 = calendar.date(from: balance_incomedate)!
+         let date2 = calendar.date(from: balance_outcomedate)!
+      
+        let numDays = Calendar.current.dateComponents([.day], from: date1, to: date2).day
+        print("NUM DAYS: \(numDays)")
+        //pochemu 1 24 chislo ne proshet
+        return (numDays!+1)
+    }
     
     func GetNextDate(currentDate : Date) -> Date  {
         
@@ -141,8 +175,8 @@ class TableViewController: UITableViewController {
     
   
       var firstPopolnenie = false
-    func CheckPayment(currentDate: Date,currentBalance:Float,currentNonPurchase_without_Grace_Balance:Float,currentGraceBalance:Float)
-        -> (currentLocalBalance:Float,currentLocalNonPurchase_without_Grace_Balance:Float,currentLocalGraceBalance:Float){
+    func CheckPayment(currentDate: Date,currentBalance:Double,currentNonPurchase_without_Grace_Balance:Double,currentGraceBalance:Double)
+        -> (currentLocalBalance:Double,currentLocalNonPurchase_without_Grace_Balance:Double,currentLocalGraceBalance:Double){
         
             
             
@@ -284,14 +318,19 @@ class TableViewController: UITableViewController {
         clearProcentTable()
         
         var currentBalance = BalanceForPeriod.income_balance
-        var currentNonPurchase_without_Grace_Balance:Float = 0
-        var currentGraceBalance:Float = 0
-        var current_period = GetDaysInMonth(balancedate:BalanceForPeriod.income_balance_date)
+        var currentNonPurchase_without_Grace_Balance:Double = 0
+        var currentGraceBalance:Double = 0
+       // var current_period = GetDaysInMonth(balancedate:BalanceForPeriod.income_balance_date)
+        
+        
+        var current_period = GetDaysForPeriod(balance_incomedate: BalanceForPeriod.income_balance_date, balance_outcomedate: BalanceForPeriod.outcome_balance_date)
+        
+        
         var currentDate = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
         
         
         //pochemu 17 chislo pishet a ne 18 srashu? UTC nado delat
-        for _ in 0..<current_period+20 {
+        for _ in 0..<current_period {
             
             print("Proshet v etu datu: \(currentDate)")
             
@@ -319,6 +358,90 @@ class TableViewController: UITableViewController {
     }
     
     
+    func CalculateProcents(){
+        
+        
+      var current_period = GetDaysForPeriod(balance_incomedate: BalanceForPeriod.income_balance_date, balance_outcomedate: BalanceForPeriod.outcome_balance_date)
+       // var current_period = GetDaysInMonth(balancedate:BalanceForPeriod.income_balance_date)
+        var currentDate = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
+         var yesterday = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
+         currentDate = GetNextDate(currentDate: currentDate!)
+        
+        
+        for _ in 0..<current_period {
+           
+         //   print("PROCENT PO ETOY DATE: \(currentDate)")
+           yesterday=GetPreviousDate(currentDate: currentDate!)
+            
+   //////////
+           //  let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Procents")
+            
+            let requestSearch: NSFetchRequest <Procents> = Procents.fetchRequest()
+            let predicate = NSPredicate(format: "time_attr == %@", yesterday as! NSDate)
+            
+            requestSearch.predicate = predicate
+            var transactionsFoundForPreviousDate = [Procents]()
+            do {
+                transactionsFoundForPreviousDate =  try context.fetch(requestSearch)
+              //  print(transactionsFoundForPreviousDate)
+            } catch {
+                print("ERROR FETCHING DATA")
+            }
+            
+            if ( transactionsFoundForPreviousDate.count != 0){
+          
+              
+                 let predicate = NSPredicate(format: "time_attr == %@", currentDate as! NSDate)
+                
+                var transactionsFoundForCurrentDate = [Procents]()
+                do {
+                    transactionsFoundForCurrentDate =  try context.fetch(requestSearch)
+                    print("TEST: \(transactionsFoundForCurrentDate[0].time_attr)")
+                } catch {
+                    print("ERROR FETCHING DATA")
+                }
+               
+                //CALCULATE PROCENTS
+                
+                var procentsCurrentGrace = transactionsFoundForPreviousDate[0].purchases_current_Grace * 32.9/365/100
+                procentsCurrentGrace = Double(round(100*procentsCurrentGrace)/100)
+                transactionsFoundForCurrentDate[0].percent_current_Grace =  procentsCurrentGrace
+                //print("PROCENT::")
+               print("Procent for this day: \(yesterday) is \(procentsCurrentGrace) \(transactionsFoundForPreviousDate[0].purchases_current_Grace)")
+                //print(procent1)
+              //  transactionsFoundForPreviousDate[0]
+               
+                
+               var procentPreviousGrace = (transactionsFoundForPreviousDate[0].purchases_previous_Grace * 32.9 +
+                transactionsFoundForPreviousDate[0].nonpurchase_previous_Grace * 39.9)/100/365
+               procentPreviousGrace = Double(round(100*procentPreviousGrace)/100)
+                 transactionsFoundForCurrentDate[0].percent_previous_Grace = procentPreviousGrace
+                print("Procent for this day PREVIOUS PERIOD: \(yesterday) is \(procentPreviousGrace) \(transactionsFoundForPreviousDate[0].purchases_previous_Grace)")
+                
+                
+            print(transactionsFoundForPreviousDate[0].purchases_current_Grace)
+            } else {
+                print("data not found for this date")
+            }
+        //////////
+        
+        
+         currentDate = GetNextDate(currentDate: currentDate!)
+            
+        }
+        
+        
+        do{
+            try context.save()
+        }catch{
+            print("Error Saving context")
+        }
+        
+        
+        
+    }
+    
+    
     
     
     let dateFormatter = DateFormatter()
@@ -338,7 +461,7 @@ class TableViewController: UITableViewController {
         }
         
         newItem.time_attr = date
-        newItem.amount_attr=Float(str[1])!
+        newItem.amount_attr=Double(str[1])!
         newItem.type_attr=str[2]
         
         // Transaction
