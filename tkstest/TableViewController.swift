@@ -110,9 +110,29 @@ class TableViewController: UITableViewController {
         do {
             TransactionsArray = try context.fetch(request)
           
+             clearProcentTable()
             FillProcentTableWithData()
             
            CalculateProcents()
+            
+            //PROSHET ZA SLED MESYATS
+            
+            BalanceForPeriod = Balance(
+                income_balance: -110562.11, outgoing_balance: -122655.30,
+                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 08, day: 25),
+                outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 09, day: 24),
+                income_ammount: 0,
+                credit_limit: 120000.00,
+                service_charge: 590,
+                data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 08, day: 18),
+                data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                amount_of_expenses: 0,
+                amount_of_receipts: 0)
+            
+            FillProcentTableWithData()
+            
+            CalculateProcents()
+            
             
             
         } catch {
@@ -160,7 +180,8 @@ class TableViewController: UITableViewController {
     func GetGraceLastDate(currentDate : Date) -> Date  {
         
         let graceEndDate = Calendar.current.date(byAdding: .day, value: 55, to:currentDate)
-        return graceEndDate!
+        
+        return GetNextDate(currentDate:graceEndDate!)
     }
     
     
@@ -194,7 +215,8 @@ class TableViewController: UITableViewController {
             
             
             var currentLocalNonPurchase_without_Grace_Balance = currentNonPurchase_without_Grace_Balance
-        var currentLocalBalance = currentBalance
+            print("HERE:::\(currentLocalNonPurchase_without_Grace_Balance)")
+            var currentLocalBalance = currentBalance
        
            var  currentLocalGraceBalance = currentGraceBalance
             
@@ -219,12 +241,13 @@ class TableViewController: UITableViewController {
             for transactionItem in transactionsFoundForThisDate {
                 print("Transaction:: \(transactionItem.amount_attr)   \(transactionItem.type_attr)")
             
-                switch transactionItem.type_attr {
-                case "Плата\r":
+                let str = transactionItem.type_attr?.filter { !" \n\t\r".contains($0) }
+                switch str {
+                case "Плата":
                      print("FOUND PLATA")
                   procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
                 currentLocalBalance = procentItem.total_debt_out
-                case "Выдача\r":
+                case "Выдача":
                 print("FOUND nalichnie vidashs")
                      procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
                      currentLocalBalance = procentItem.total_debt_out
@@ -233,7 +256,7 @@ class TableViewController: UITableViewController {
                     currentLocalNonPurchase_without_Grace_Balance = currentLocalNonPurchase_without_Grace_Balance + transactionItem.amount_attr
                          procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
                     
-                case "Комиссия\r":
+                case "Комиссия":
                     print("FOUND komissia")
                     procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
                     currentLocalBalance = procentItem.total_debt_out
@@ -241,7 +264,7 @@ class TableViewController: UITableViewController {
                     currentLocalNonPurchase_without_Grace_Balance = currentLocalNonPurchase_without_Grace_Balance + transactionItem.amount_attr
                     procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
                     
-                case "Оплата\r":
+                case "Оплата":
                     print("FOUND Oplata")
                  procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
                      currentLocalBalance = procentItem.total_debt_out
@@ -274,7 +297,7 @@ class TableViewController: UITableViewController {
                     
                     
                     
-                case "Пополнение\r":
+                case "Пополнение":
                     if(!firstPopolnenie){
                       print("FIRST")
                         firstPopolnenie = true
@@ -310,6 +333,7 @@ class TableViewController: UITableViewController {
         print(currentLocalBalance)
         print("nonpurchase_without_Grace \(currentLocalNonPurchase_without_Grace_Balance)")
            print("Current Grace \(currentLocalGraceBalance)")
+         // print("Grace Previouse Period \(.purchases_previous_Grace)")
             procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
             procentItem.purchases_current_Grace = currentLocalGraceBalance
             
@@ -326,13 +350,15 @@ class TableViewController: UITableViewController {
     }
     
     
+    var currentNonPurchase_without_Grace_Balance:Double = 0
+    var currentGraceBalance:Double = 0
+    
     func FillProcentTableWithData(){
         
-        clearProcentTable()
+       
         
         var currentBalance = BalanceForPeriod.income_balance
-        var currentNonPurchase_without_Grace_Balance:Double = 0
-        var currentGraceBalance:Double = 0
+      
        // var current_period = GetDaysInMonth(balancedate:BalanceForPeriod.income_balance_date)
         
         
@@ -370,11 +396,11 @@ class TableViewController: UITableViewController {
         
     }
     
-    
-    
-    func calculateTotalProcentForPeriod(date_for_calculation:DateComponents) ->Float{
+    //975.32
+    //0.89
+    func calculateTotalProcentForPeriod(date_for_calculation:DateComponents) ->Double{
        //-108144.8
-        
+        var total_procent:Double = 0 //
         let request: NSFetchRequest<Procents> = Procents.fetchRequest()
         let sort = NSSortDescriptor(key: #keyPath(Procents.time_attr), ascending: true)
         request.sortDescriptors = [sort]
@@ -392,7 +418,7 @@ class TableViewController: UITableViewController {
                 procent_non_grace += ProcentArray[i].percent_without_Grace
                 // print(ProcentArray[i].time_attr)
             }
-           
+        
         
             
             procent_counted = Double(round(100*procent_counted)/100)
@@ -410,9 +436,45 @@ class TableViewController: UITableViewController {
             
             print("procent_grace_previous")
             print(procent_grace_previous)
+         
             
-            print(procent_counted+procent_non_grace+procent_grace_previous)
             
+            
+            
+            var data_procent_count = Calendar.current.date(from: BalanceForPeriod.outcome_balance_date)
+            var data_last_pay_for_graceperiod = GetGraceLastDate(currentDate: data_procent_count!)
+            // = procent_counted+procent_non_grace+procent_grace_previous
+           
+            
+            //PROVERKHA PROSHEL LI GRACE PERIOD
+            if(data_procent_count! < data_last_pay_for_graceperiod){
+             total_procent = procent_non_grace+procent_grace_previous
+                
+                 ProcentArray[ProcentArray.count-1].purchases_previous_Grace = ProcentArray[ProcentArray.count-1].purchases_current_Grace
+                ProcentArray[ProcentArray.count-1].purchases_current_Grace  = 0
+                
+            } else {
+               total_procent = procent_counted+procent_non_grace+procent_grace_previous
+            }
+           
+            
+            print("TOTAL:!")
+            print(total_procent)
+            
+           
+             ProcentArray[ProcentArray.count-1].total_debt_out  =  ProcentArray[ProcentArray.count-1].total_debt_out - total_procent
+                
+                var procent_strahovka = 0.89 *  ProcentArray[ProcentArray.count-1].total_debt_out / 100 * -1
+          
+           procent_strahovka =  Double(round(100*procent_strahovka)/100)
+            print("STRAHOVKA")
+            print(procent_strahovka)
+            
+            ProcentArray[ProcentArray.count-1].total_debt_out -= procent_strahovka
+            print(ProcentArray[ProcentArray.count-1].total_debt_out)
+            
+            let plata_sms:Double = 59
+            ProcentArray[ProcentArray.count-1].nonpurchase_previous_Grace += procent_strahovka + plata_sms
             
         } catch {
             print("error getting data")
@@ -425,7 +487,7 @@ class TableViewController: UITableViewController {
         
         
         
-        return 0.00
+        return total_procent
     }
     
     
@@ -523,7 +585,7 @@ class TableViewController: UITableViewController {
         var totalProcent = calculateTotalProcentForPeriod(date_for_calculation: BalanceForPeriod.outcome_balance_date)
         print("Total Procent: \(totalProcent)")
         
-        
+        currentGraceBalance = 0.0
         
         
         do{
@@ -550,7 +612,7 @@ class TableViewController: UITableViewController {
         dateFormatter.dateFormat = "dd-MM-yy"
         dateFormatter.locale = Locale(identifier: "ru_RU")
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
-       
+      // print(str[0])
         guard let date = dateFormatter.date(from: str[0]) else {
             fatalError("ERROR: Date conversion failed due to mismatched format.")
         }
