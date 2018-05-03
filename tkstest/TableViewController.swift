@@ -466,7 +466,8 @@ class TableViewController: UITableViewController {
             
             //PROVERKHA PROSHEL LI GRACE PERIOD
             if(data_procent_count! < data_last_pay_for_graceperiod){
-             total_procent = procent_non_grace+procent_grace_previous
+          print("GRACE ZAKONSHILSA")
+                total_procent = procent_non_grace+procent_grace_previous
                 
                  ProcentArray[ProcentArray.count-1].purchases_previous_Grace = ProcentArray[ProcentArray.count-1].purchases_current_Grace
                 ProcentArray[ProcentArray.count-1].purchases_current_Grace  = 0
@@ -505,10 +506,6 @@ class TableViewController: UITableViewController {
         } catch {
             print("error getting data")
         }
-        
-        
-        
-        
         
         
         
