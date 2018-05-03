@@ -209,10 +209,10 @@ class TableViewController: UITableViewController {
     
   
       var firstPopolnenie = false
-    func CheckPayment(currentDate: Date,currentBalance:Double,currentNonPurchase_without_Grace_Balance:Double,currentGraceBalance:Double)
-        -> (currentLocalBalance:Double,currentLocalNonPurchase_without_Grace_Balance:Double,currentLocalGraceBalance:Double){
+    func CheckPayment(currentDate: Date,currentBalance:Double,currentNonPurchase_without_Grace_Balance:Double,currentGraceBalance:Double,previouseGraceBalance:Double,currentProcent:Double)
+        -> (currentLocalBalance:Double,currentLocalNonPurchase_without_Grace_Balance:Double,currentLocalGraceBalance:Double,previouseGraceBalance:Double,currentLocalProcent:Double){
         
-            
+            var currentLocalProcent = currentProcent
             
             var currentLocalNonPurchase_without_Grace_Balance = currentNonPurchase_without_Grace_Balance
             print("HERE:::\(currentLocalNonPurchase_without_Grace_Balance)")
@@ -220,7 +220,7 @@ class TableViewController: UITableViewController {
        
            var  currentLocalGraceBalance = currentGraceBalance
             
-            
+            var currentpreviouseGraceBalance = previouseGraceBalance
             
             let procentItem = Procents(context: context)
         procentItem.time_attr = currentDate
@@ -292,28 +292,38 @@ class TableViewController: UITableViewController {
                     print("AFTER")
                     print(currentLocalBalance)
                     
-                    currentLocalGraceBalance = currentLocalGraceBalance -  transactionItem.amount_attr
-                    procentItem.purchases_current_Grace = currentLocalGraceBalance
+                 
                     
-                    
-                    
-                case "Пополнение":
-                    if(!firstPopolnenie){
-                      print("FIRST")
-                        firstPopolnenie = true
-                       
-                        currentLocalGraceBalance = currentLocalGraceBalance +  BalanceForPeriod.service_charge
+                    if(currentpreviouseGraceBalance != 0) {
+                           print("NOT NULL")
+                        currentpreviouseGraceBalance = currentpreviouseGraceBalance - transactionItem.amount_attr
+                      procentItem.purchases_previous_Grace = currentpreviouseGraceBalance
+                        print("PROCNETS NOW:\(currentLocalProcent)")
+                        if(currentLocalProcent != 0 && transactionItem.amount_attr >= currentLocalProcent) {
+                            print("PROCENT NOT NULL")
+                           
+                            currentpreviouseGraceBalance += currentLocalProcent
+                            currentLocalProcent = 0
+                            procentItem.procents = currentLocalProcent
+                            procentItem.purchases_previous_Grace = currentpreviouseGraceBalance
+                            
+                        } else if(currentLocalProcent != 0 && transactionItem.amount_attr < currentLocalProcent){
+                            var diff = currentLocalProcent - transactionItem.amount_attr
+                            currentpreviouseGraceBalance += diff
+                            procentItem.purchases_previous_Grace = currentpreviouseGraceBalance
+                            procentItem.procents -= transactionItem.amount_attr
+                            
+                            
+                        }
+                        
+                    } else {
+                        currentLocalGraceBalance = currentLocalGraceBalance -  transactionItem.amount_attr
                         procentItem.purchases_current_Grace = currentLocalGraceBalance
-                        
-                        
                     }
                     
-                    print("FOUND Popolnenie")
-                    print(currentLocalBalance)
-                    procentItem.total_debt_out = currentLocalBalance + transactionItem.amount_attr
-                    currentLocalBalance = procentItem.total_debt_out
-                    print("AFTER")
-                    print(currentLocalBalance)
+                    
+                    
+               
                 default:
                     print("No category found")
                 }
@@ -333,7 +343,7 @@ class TableViewController: UITableViewController {
         print(currentLocalBalance)
         print("nonpurchase_without_Grace \(currentLocalNonPurchase_without_Grace_Balance)")
            print("Current Grace \(currentLocalGraceBalance)")
-         // print("Grace Previouse Period \(.purchases_previous_Grace)")
+          print("Grace Previouse Period \(currentpreviouseGraceBalance)")
             procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
             procentItem.purchases_current_Grace = currentLocalGraceBalance
             
@@ -346,19 +356,22 @@ class TableViewController: UITableViewController {
             
             
             
-        return (currentLocalBalance,currentLocalNonPurchase_without_Grace_Balance,currentLocalGraceBalance)
+        return (currentLocalBalance,currentLocalNonPurchase_without_Grace_Balance,currentLocalGraceBalance,currentpreviouseGraceBalance,currentLocalProcent)
     }
     
     
     var currentNonPurchase_without_Grace_Balance:Double = 0
     var currentGraceBalance:Double = 0
+    var previouseGraceBalance:Double = 0
+    var currentProcent:Double = 0
+    
     
     func FillProcentTableWithData(){
         
        
         
         var currentBalance = BalanceForPeriod.income_balance
-      
+     
        // var current_period = GetDaysInMonth(balancedate:BalanceForPeriod.income_balance_date)
         
         
@@ -371,14 +384,19 @@ class TableViewController: UITableViewController {
         //pochemu 17 chislo pishet a ne 18 srashu? UTC nado delat
         for _ in 0..<current_period {
             
-            print("Proshet v etu datu: \(currentDate)")
+            print("Proshet v etu datu: \(currentDate) and procent is \(currentProcent)")
             
             //check if payment was for this day
-            let current = CheckPayment(currentDate: currentDate!,currentBalance:  currentBalance, currentNonPurchase_without_Grace_Balance: currentNonPurchase_without_Grace_Balance,currentGraceBalance: currentGraceBalance)
+            let current = CheckPayment(currentDate: currentDate!,currentBalance:  currentBalance, currentNonPurchase_without_Grace_Balance: currentNonPurchase_without_Grace_Balance,currentGraceBalance: currentGraceBalance,previouseGraceBalance: previouseGraceBalance,currentProcent:currentProcent)
+          
             
+            currentProcent = current.currentLocalProcent
             currentBalance = current.currentLocalBalance
             currentNonPurchase_without_Grace_Balance = current.currentLocalNonPurchase_without_Grace_Balance
          currentGraceBalance = current.currentLocalGraceBalance
+            
+            previouseGraceBalance = current.previouseGraceBalance
+            
             currentDate = GetNextDate(currentDate: currentDate!)
             
         }
@@ -437,7 +455,7 @@ class TableViewController: UITableViewController {
             print("procent_grace_previous")
             print(procent_grace_previous)
          
-            
+           
             
             
             
@@ -461,6 +479,8 @@ class TableViewController: UITableViewController {
             print("TOTAL:!")
             print(total_procent)
             
+            ProcentArray[ProcentArray.count-1].procents = total_procent
+            
            
              ProcentArray[ProcentArray.count-1].total_debt_out  =  ProcentArray[ProcentArray.count-1].total_debt_out - total_procent
                 
@@ -475,6 +495,12 @@ class TableViewController: UITableViewController {
             
             let plata_sms:Double = 59
             ProcentArray[ProcentArray.count-1].nonpurchase_previous_Grace += procent_strahovka + plata_sms
+            
+              previouseGraceBalance = ProcentArray[ProcentArray.count-1].purchases_previous_Grace
+            
+            currentProcent = total_procent
+            print("PROCENT IS NOW \(currentProcent)")
+            
             
         } catch {
             print("error getting data")
