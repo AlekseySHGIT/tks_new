@@ -14,7 +14,7 @@ struct Balance {
     var income_balance:Double = 0.00
     var outgoing_balance = -110562.11
     var income_balance_date = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 17)
-    var outcome_balance_date = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 24)
+    var outcome_balance_date = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 08, day: 24)
     var income_ammount = 15000.00
     var credit_limit:Double = 120000.00
     var service_charge:Double = 590
@@ -34,6 +34,7 @@ class TableViewController: UITableViewController {
     var ProcentArray = [Procents]()
     var foundProcentDataArray = [Procents]()
     var BalanceForPeriod = Balance()
+    var LastDayForPayInGracePeriod = Date()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,7 +43,7 @@ class TableViewController: UITableViewController {
         BalanceForPeriod = Balance(
             income_balance: 0.00, outgoing_balance: -110562.11,
             income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 07, day: 17),
-            outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 24),
+            outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 08, day: 24),
             income_ammount: 0,
             credit_limit: 120000.00,
             service_charge: 590,
@@ -52,9 +53,25 @@ class TableViewController: UITableViewController {
             amount_of_receipts: 0)
         
         
+        var b = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
+        LastDayForPayInGracePeriod = GetGraceLastDate(currentDate: b!)
+        
+        
+        
         //особый случай для самой первой покупки, подумать может быть ошибка для будущих
         if(BalanceForPeriod.income_balance == 0.00 && (BalanceForPeriod.data_fist_payment.day! > BalanceForPeriod.income_balance_date.day!)){
            BalanceForPeriod.outcome_balance_date = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 08, day: 24)
+           //грейс смещается
+          // may be in 30 dnay a bryat dlya mesatsa
+            var oneMonthAgo = thisDayOneMonthEarlier(currentDate: Calendar.current.date(from: BalanceForPeriod.outcome_balance_date)!, value: -1)
+            print("AAAAA")
+            LastDayForPayInGracePeriod = GetGraceLastDate(currentDate: oneMonthAgo)
+            print(LastDayForPayInGracePeriod)
+         //   GetPreviousDate(currentDate: <#T##Date#>)
+           // GetDaysForPeriod(balance_incomedate: <#T##DateComponents#>, balance_outcomedate: outcome_balance_date)
+            //b = Calendar.current.date(from: BalanceForPeriod.outcome_balance_date)
+            //aa = GetGraceLastDate(currentDate: b!)
+            
         }
         
        // if(income_balance == 0.00 && )
@@ -62,10 +79,9 @@ class TableViewController: UITableViewController {
        
        //var tt =  GetDaysForPeriod(balance_incomedate: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 07, day: 25), balance_outcomedate: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 09, day: 19))
         //print("PERIOD::\(tt)")
-        var b = Calendar.current.date(from: BalanceForPeriod.outcome_balance_date)
-        var aa = GetGraceLastDate(currentDate: b!)
+       
         print("LAST DATE")
-        print(aa)
+        print(LastDayForPayInGracePeriod)
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
        
         readDataFromCSVFile()
@@ -179,9 +195,14 @@ class TableViewController: UITableViewController {
     
     func GetGraceLastDate(currentDate : Date) -> Date  {
         
-        let graceEndDate = Calendar.current.date(byAdding: .day, value: 55, to:currentDate)
+        let graceEndDate = Calendar.current.date(byAdding: .day, value: 56, to:currentDate)
         
         return GetNextDate(currentDate:graceEndDate!)
+    }
+    
+    func thisDayOneMonthEarlier(currentDate : Date,value:Int) -> Date{
+        let days = Calendar.current.date(byAdding: .month, value: value, to:currentDate)
+         return days!
     }
     
     
@@ -347,9 +368,26 @@ class TableViewController: UITableViewController {
             procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
             procentItem.purchases_current_Grace = currentLocalGraceBalance
             
-            //////
+            ////// RAZOBRATSA V ETOM KUSKE
+            
+            if(LastDayForPayInGracePeriod == currentDate && (currentpreviouseGraceBalance != 0 || currentNonPurchase_without_Grace_Balance != 0)){
+                print("GRACE DATE IS HERE")
+           procentItem.purchases_without_Grace = currentpreviouseGraceBalance
+            currentpreviouseGraceBalance = 0
+            procentItem.purchases_previous_Grace = 0
             
             
+                
+                
+                procentItem.nonpurchase_without_Grace += procentItem.nonpurchase_previous_Grace
+             
+             
+               
+               
+            
+            currentLocalNonPurchase_without_Grace_Balance =  procentItem.nonpurchase_without_Grace
+                procentItem.nonpurchase_previous_Grace = 0
+            }
             
             
             //////
@@ -506,6 +544,10 @@ class TableViewController: UITableViewController {
         } catch {
             print("error getting data")
         }
+        
+        
+        
+        
         
         
         
