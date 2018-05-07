@@ -230,18 +230,27 @@ class TableViewController: UITableViewController {
     
   
       var firstPopolnenie = false
-    func CheckPayment(currentDate: Date,currentBalance:Double,currentNonPurchase_without_Grace_Balance:Double,currentGraceBalance:Double,previouseGraceBalance:Double,currentProcent:Double)
-        -> (currentLocalBalance:Double,currentLocalNonPurchase_without_Grace_Balance:Double,currentLocalGraceBalance:Double,previouseGraceBalance:Double,currentLocalProcent:Double){
+  
+    func CheckPayment(currentDate: Date,currentBalance:Double,currentNonPurchase_without_Grace_Balance:Double,currentGraceBalance:Double,previouseGraceBalance:Double,currentProcent:Double,currentNonPurchase_previouse_Grace_Balance:Double,current_purshases_without_Grace:Double)
+        -> (currentLocalBalance:Double,currentLocalNonPurchase_without_Grace_Balance:Double,currentLocalGraceBalance:Double,previouseGraceBalance:Double,currentLocalProcent:Double,currentLocalNonPurchase_previouse_Grace_Balance:Double,currentLocal_purshases_without_Grace:Double){
         
+            var currentLocalNonPurchase_previouse_Grace_Balance = currentNonPurchase_previouse_Grace_Balance
+          
+            var currentLocal_purshases_without_Grace = current_purshases_without_Grace
             var currentLocalProcent = currentProcent
-            
+          
             var currentLocalNonPurchase_without_Grace_Balance = currentNonPurchase_without_Grace_Balance
-            print("NonPurchases_without_GRACE: \(currentLocalNonPurchase_without_Grace_Balance)")
+          
             var currentLocalBalance = currentBalance
        
            var  currentLocalGraceBalance = currentGraceBalance
             
             var currentpreviouseGraceBalance = previouseGraceBalance
+              print("CurrentLocalPercent is: \(currentLocalProcent)")
+            print("CurrentLocalGraceBalance is: \(currentLocalGraceBalance)")
+               print("CurrentLocalPreviouseGraceBalance is: \(currentpreviouseGraceBalance)")
+               print("CurrentNonPurchasePreviousGrace is: \(currentNonPurchase_previouse_Grace_Balance)")
+            print("Current_NonPurchases_without_GRACE: \(currentLocalNonPurchase_without_Grace_Balance)")
             
             let procentItem = Procents(context: context)
         procentItem.time_attr = currentDate
@@ -360,42 +369,57 @@ class TableViewController: UITableViewController {
              procentItem.total_debt_out = currentLocalBalance
            
         }
-        print("BALANCE: ")
-        print(currentLocalBalance)
-       
-            print("nonpurchase_without_Grace \(currentLocalNonPurchase_without_Grace_Balance)")
-           print("Current Grace \(currentLocalGraceBalance)")
-          print("Grace Previouse Period \(currentpreviouseGraceBalance)")
+         
+           
+         
             procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
             procentItem.purchases_current_Grace = currentLocalGraceBalance
-            
+            procentItem.nonpurchase_previous_Grace = currentpreviouseGraceBalance
             ////// RAZOBRATSA V ETOM KUSKE
             
             if(LastDayForPayInGracePeriod == currentDate && (currentpreviouseGraceBalance != 0 || currentNonPurchase_without_Grace_Balance != 0)){
                 print("GRACE DATE IS HERE")
-           procentItem.purchases_without_Grace = currentpreviouseGraceBalance
+         currentLocal_purshases_without_Grace =  currentpreviouseGraceBalance
+            
+                
+                procentItem.purchases_without_Grace = current_purshases_without_Grace
             currentpreviouseGraceBalance = 0
             procentItem.purchases_previous_Grace = 0
-            
+           
+                currentLocalNonPurchase_without_Grace_Balance  += currentLocalNonPurchase_previouse_Grace_Balance
+                currentLocalNonPurchase_previouse_Grace_Balance = 0
+                print("SHOULD BE 65000")
+                print(currentLocalNonPurchase_without_Grace_Balance)
+                //  currentLocalNonPurchase_previouse_Grace_Balance = 0
+             print("1034 WILL BE 0")
+               
+                procentItem.nonpurchase_previous_Grace = currentLocalNonPurchase_previouse_Grace_Balance
             
                 
                 
-                procentItem.nonpurchase_without_Grace += procentItem.nonpurchase_previous_Grace
-             
-             
+                procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
+               procentItem.nonpurchase_previous_Grace = currentLocalNonPurchase_previouse_Grace_Balance
+            
                
                
             
-            currentLocalNonPurchase_without_Grace_Balance =  procentItem.nonpurchase_without_Grace
-                procentItem.nonpurchase_previous_Grace = 0
+           // currentLocalNonPurchase_without_Grace_Balance =  procentItem.nonpurchase_without_Grace
+              
             }
-            
+            print("")
+            print("BALANCE: ")
+            print(currentLocalBalance)
+            print("Current Grace \(currentLocalGraceBalance)")
+            print("Grace Previouse Period \(currentpreviouseGraceBalance)")
+              print("currentLocal_purshases_without_Grace \(currentLocal_purshases_without_Grace)")
+            print("currentLocalNonPurchase_previouse_Grace_Balance \(currentLocalNonPurchase_previouse_Grace_Balance)")
+            print("currentLocalNonPurchase_without_Grace_Balance \(currentLocalNonPurchase_without_Grace_Balance)")
             
             //////
             
             
             
-        return (currentLocalBalance,currentLocalNonPurchase_without_Grace_Balance,currentLocalGraceBalance,currentpreviouseGraceBalance,currentLocalProcent)
+        return (currentLocalBalance,currentLocalNonPurchase_without_Grace_Balance,currentLocalGraceBalance,currentpreviouseGraceBalance,currentLocalProcent,currentLocalNonPurchase_previouse_Grace_Balance,currentLocal_purshases_without_Grace)
     }
     
     
@@ -403,8 +427,8 @@ class TableViewController: UITableViewController {
     var currentGraceBalance:Double = 0
     var previouseGraceBalance:Double = 0
     var currentProcent:Double = 0
-    
-    
+    var currentNonPurchase_previouse_Grace_Balance:Double = 0
+    var current_purshases_without_Grace:Double = 0
     func FillProcentTableWithData(){
         
        
@@ -422,13 +446,16 @@ class TableViewController: UITableViewController {
         
         //pochemu 17 chislo pishet a ne 18 srashu? UTC nado delat
         for _ in 0..<current_period {
-            
+            print("")
+            print("/////")
             print("Proshet v etu datu: \(currentDate) and procent is \(currentProcent)")
             
             //check if payment was for this day
-            let current = CheckPayment(currentDate: currentDate!,currentBalance:  currentBalance, currentNonPurchase_without_Grace_Balance: currentNonPurchase_without_Grace_Balance,currentGraceBalance: currentGraceBalance,previouseGraceBalance: previouseGraceBalance,currentProcent:currentProcent)
+            let current = CheckPayment(currentDate: currentDate!,currentBalance:  currentBalance, currentNonPurchase_without_Grace_Balance: currentNonPurchase_without_Grace_Balance,currentGraceBalance: currentGraceBalance,previouseGraceBalance: previouseGraceBalance,currentProcent:currentProcent,currentNonPurchase_previouse_Grace_Balance:currentNonPurchase_previouse_Grace_Balance,current_purshases_without_Grace:current_purshases_without_Grace)
           
+            currentNonPurchase_previouse_Grace_Balance = current.currentLocalNonPurchase_previouse_Grace_Balance
             
+            current_purshases_without_Grace = current.currentLocal_purshases_without_Grace
             currentProcent = current.currentLocalProcent
             currentBalance = current.currentLocalBalance
             currentNonPurchase_without_Grace_Balance = current.currentLocalNonPurchase_without_Grace_Balance
@@ -455,7 +482,7 @@ class TableViewController: UITableViewController {
     
     //975.32
     //0.89
-    func calculateTotalProcentForPeriod(date_for_calculation:DateComponents) ->Double{
+    func calculateTotalProcentForPeriod(balance_incomedate: DateComponents, balance_outcomedate: DateComponents) ->Double{
        //-108144.8
         var total_procent:Double = 0 //
         let request: NSFetchRequest<Procents> = Procents.fetchRequest()
@@ -467,8 +494,10 @@ class TableViewController: UITableViewController {
         var procent_non_grace:Double = 0;
         do {
             ProcentArray = try context.fetch(request)
+       
             for i in 0..<ProcentArray.count-1{
-              print("ADDED THIS PROCENT\(ProcentArray[i].percent_current_Grace)")
+                
+                print("ADDED THIS PROCENT\(ProcentArray[i].percent_current_Grace)")
                 procent_counted += ProcentArray[i].percent_current_Grace
                
                 procent_grace_previous += ProcentArray[i].percent_previous_Grace
@@ -534,7 +563,10 @@ class TableViewController: UITableViewController {
             print(ProcentArray[ProcentArray.count-1].total_debt_out)
             
             let plata_sms:Double = 59
-            ProcentArray[ProcentArray.count-1].nonpurchase_previous_Grace += procent_strahovka + plata_sms
+            
+            currentNonPurchase_previouse_Grace_Balance = procent_strahovka + plata_sms
+            
+            ProcentArray[ProcentArray.count-1].nonpurchase_previous_Grace += currentNonPurchase_previouse_Grace_Balance
             
               previouseGraceBalance = ProcentArray[ProcentArray.count-1].purchases_previous_Grace
             
@@ -648,7 +680,7 @@ class TableViewController: UITableViewController {
         
         //SHOW TOTAL PROCENT FOR PAY
         
-        var totalProcent = calculateTotalProcentForPeriod(date_for_calculation: BalanceForPeriod.outcome_balance_date)
+        var totalProcent = calculateTotalProcentForPeriod(balance_incomedate: BalanceForPeriod.income_balance_date, balance_outcomedate: BalanceForPeriod.outcome_balance_date)
         print("Total Procent: \(totalProcent)")
         
         currentGraceBalance = 0.0
