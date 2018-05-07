@@ -484,6 +484,41 @@ class TableViewController: UITableViewController {
     //0.89
     func calculateTotalProcentForPeriod(balance_incomedate: DateComponents, balance_outcomedate: DateComponents) ->Double{
        //-108144.8
+     
+        var current_period = GetDaysForPeriod(balance_incomedate: BalanceForPeriod.income_balance_date, balance_outcomedate: BalanceForPeriod.outcome_balance_date)
+        // var current_period = GetDaysInMonth(balancedate:BalanceForPeriod.income_balance_date)
+        var currentDate = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
+      
+       // currentDate = GetNextDate(currentDate: currentDate!)
+        /*
+         for _ in 0..<current_period {
+         
+         //   print("PROCENT PO ETOY DATE: \(currentDate)")
+         yesterday=GetPreviousDate(currentDate: currentDate!)
+         
+         //////////
+         //  let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Procents")
+         
+         let requestSearch: NSFetchRequest <Procents> = Procents.fetchRequest()
+         let predicate = NSPredicate(format: "time_attr == %@", yesterday as! NSDate)
+         
+         requestSearch.predicate = predicate
+         var transactionsFoundForPreviousDate = [Procents]()
+         do {
+         transactionsFoundForPreviousDate =  try context.fetch(requestSearch)
+         //  print(transactionsFoundForPreviousDate)
+         } catch {
+         print("ERROR FETCHING DATA")
+         }
+ 
+ 
+ 
+ 
+ */
+        
+        
+        
+        
         var total_procent:Double = 0 //
         let request: NSFetchRequest<Procents> = Procents.fetchRequest()
         let sort = NSSortDescriptor(key: #keyPath(Procents.time_attr), ascending: true)
