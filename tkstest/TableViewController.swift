@@ -236,7 +236,7 @@ class TableViewController: UITableViewController {
             var currentLocalProcent = currentProcent
             
             var currentLocalNonPurchase_without_Grace_Balance = currentNonPurchase_without_Grace_Balance
-            print("HERE:::\(currentLocalNonPurchase_without_Grace_Balance)")
+            print("NonPurchases_without_GRACE: \(currentLocalNonPurchase_without_Grace_Balance)")
             var currentLocalBalance = currentBalance
        
            var  currentLocalGraceBalance = currentGraceBalance
@@ -362,7 +362,8 @@ class TableViewController: UITableViewController {
         }
         print("BALANCE: ")
         print(currentLocalBalance)
-        print("nonpurchase_without_Grace \(currentLocalNonPurchase_without_Grace_Balance)")
+       
+            print("nonpurchase_without_Grace \(currentLocalNonPurchase_without_Grace_Balance)")
            print("Current Grace \(currentLocalGraceBalance)")
           print("Grace Previouse Period \(currentpreviouseGraceBalance)")
             procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
