@@ -132,10 +132,10 @@ class TableViewController: UITableViewController {
            CalculateProcents()
             
             //PROSHET ZA SLED MESYATS
-            
+         
             BalanceForPeriod = Balance(
                 income_balance: -110562.11, outgoing_balance: -122655.30,
-                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 08, day: 25),
+                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 08, day: 24),
                 outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 09, day: 24),
                 income_ammount: 0,
                 credit_limit: 120000.00,
@@ -145,10 +145,10 @@ class TableViewController: UITableViewController {
                 amount_of_expenses: 0,
                 amount_of_receipts: 0)
             
-            FillProcentTableWithData()
+          //  FillProcentTableWithData()
             
-            CalculateProcents()
-            
+           // CalculateProcents()
+           
             
             
         } catch {
@@ -411,9 +411,10 @@ class TableViewController: UITableViewController {
             print(currentLocalBalance)
             print("Current Grace \(currentLocalGraceBalance)")
             print("Grace Previouse Period \(currentpreviouseGraceBalance)")
-              print("currentLocal_purshases_without_Grace \(currentLocal_purshases_without_Grace)")
+            print("currentLocal_purshases_without_Grace \(currentLocal_purshases_without_Grace)")
+             print("currentLocalNonPurchase_without_Grace_Balance \(currentLocalNonPurchase_without_Grace_Balance)")
             print("currentLocalNonPurchase_previouse_Grace_Balance \(currentLocalNonPurchase_previouse_Grace_Balance)")
-            print("currentLocalNonPurchase_without_Grace_Balance \(currentLocalNonPurchase_without_Grace_Balance)")
+       
             
             //////
             
@@ -449,9 +450,9 @@ class TableViewController: UITableViewController {
             print("")
             print("/////")
             print("Proshet v etu datu: \(currentDate) and procent is \(currentProcent)")
-            
+            print("currentBalance: \(currentBalance)")
             //check if payment was for this day
-            let current = CheckPayment(currentDate: currentDate!,currentBalance:  currentBalance, currentNonPurchase_without_Grace_Balance: currentNonPurchase_without_Grace_Balance,currentGraceBalance: currentGraceBalance,previouseGraceBalance: previouseGraceBalance,currentProcent:currentProcent,currentNonPurchase_previouse_Grace_Balance:currentNonPurchase_previouse_Grace_Balance,current_purshases_without_Grace:current_purshases_without_Grace)
+            let current = CheckPayment(currentDate: currentDate!,currentBalance: currentBalance, currentNonPurchase_without_Grace_Balance: currentNonPurchase_without_Grace_Balance,currentGraceBalance: currentGraceBalance,previouseGraceBalance: previouseGraceBalance,currentProcent:currentProcent,currentNonPurchase_previouse_Grace_Balance:currentNonPurchase_previouse_Grace_Balance,current_purshases_without_Grace:current_purshases_without_Grace)
           
             currentNonPurchase_previouse_Grace_Balance = current.currentLocalNonPurchase_previouse_Grace_Balance
             
@@ -482,6 +483,8 @@ class TableViewController: UITableViewController {
     
     //975.32
     //0.89
+  
+    /*
     func calculateTotalProcentForPeriod(balance_incomedate: DateComponents, balance_outcomedate: DateComponents) ->Double{
        //-108144.8
      
@@ -490,32 +493,6 @@ class TableViewController: UITableViewController {
         var currentDate = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
       
        // currentDate = GetNextDate(currentDate: currentDate!)
-        /*
-         for _ in 0..<current_period {
-         
-         //   print("PROCENT PO ETOY DATE: \(currentDate)")
-         yesterday=GetPreviousDate(currentDate: currentDate!)
-         
-         //////////
-         //  let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Procents")
-         
-         let requestSearch: NSFetchRequest <Procents> = Procents.fetchRequest()
-         let predicate = NSPredicate(format: "time_attr == %@", yesterday as! NSDate)
-         
-         requestSearch.predicate = predicate
-         var transactionsFoundForPreviousDate = [Procents]()
-         do {
-         transactionsFoundForPreviousDate =  try context.fetch(requestSearch)
-         //  print(transactionsFoundForPreviousDate)
-         } catch {
-         print("ERROR FETCHING DATA")
-         }
- 
- 
- 
- 
- */
-        
         
         
         
@@ -532,7 +509,7 @@ class TableViewController: UITableViewController {
        
             for i in 0..<ProcentArray.count-1{
                 
-                print("ADDED THIS PROCENT\(ProcentArray[i].percent_current_Grace)")
+                print("ADDED THIS PROCENT\(ProcentArray[i].percent_current_Grace) at \(ProcentArray[i].time_attr)")
                 procent_counted += ProcentArray[i].percent_current_Grace
                
                 procent_grace_previous += ProcentArray[i].percent_previous_Grace
@@ -587,7 +564,7 @@ class TableViewController: UITableViewController {
             
            
              ProcentArray[ProcentArray.count-1].total_debt_out  =  ProcentArray[ProcentArray.count-1].total_debt_out - total_procent
-                
+                print(ProcentArray[ProcentArray.count-1].total_debt_out)
                 var procent_strahovka = 0.89 *  ProcentArray[ProcentArray.count-1].total_debt_out / 100 * -1
           
            procent_strahovka =  Double(round(100*procent_strahovka)/100)
@@ -612,7 +589,141 @@ class TableViewController: UITableViewController {
         } catch {
             print("error getting data")
         }
+     
+        return total_procent
+    }
+    */
+    
+    func calculateTotalProcentForPeriodNEW(balance_incomedate: DateComponents, balance_outcomedate: DateComponents) ->Double{
+        //-108144.8
+      
+        print("START TOTAL PROCENT COUNT NEW")
+        var current_period = GetDaysForPeriod(balance_incomedate: BalanceForPeriod.income_balance_date, balance_outcomedate: BalanceForPeriod.outcome_balance_date)
+        var currentDate = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
+        //currentDate = GetPreviousDate(currentDate: currentDate!)
+        print("PROCENT WILL BE COUNT FROM THIS DAY \(currentDate) and for these days \(current_period)")
+     
+        var total_procent:Double = 0
+        var procent_counted:Double = 0;
+        var procent_grace_previous:Double = 0;
+        var procent_non_grace:Double = 0;
         
+           // currentDate = GetNextDate(currentDate: currentDate!)
+        for _ in 0..<current_period {
+            
+            
+            let request: NSFetchRequest<Procents> = Procents.fetchRequest()
+            let sort = NSSortDescriptor(key: #keyPath(Procents.time_attr), ascending: true)
+            let predicate = NSPredicate(format: "time_attr == %@", currentDate as! NSDate)
+            request.sortDescriptors = [sort]
+            request.predicate = predicate
+         
+            
+            do {
+               
+                ProcentArray = try context.fetch(request)
+         
+                print("PROCENT AT DATE: \(currentDate)")
+                print("ADDED THIS PROCENT \(ProcentArray[0].percent_current_Grace) at \(ProcentArray[0].time_attr)")
+                procent_counted += ProcentArray[0].percent_current_Grace
+                print(procent_counted)
+                procent_grace_previous += ProcentArray[0].percent_previous_Grace
+                print("procent_grace_previous: \(procent_grace_previous)")
+                procent_non_grace += ProcentArray[0].percent_without_Grace
+                print(procent_non_grace)
+               
+                currentDate = GetNextDate(currentDate: currentDate!)
+                
+            } catch {
+                print("error getting data")
+            }
+       
+        }
+        
+        
+        procent_counted = Double(round(100*procent_counted)/100)
+        //print(procent_counted)
+        procent_grace_previous = Double(round(100*procent_grace_previous)/100)
+        //  print(procent_grace_previous)
+        
+        procent_non_grace = Double(round(100*procent_non_grace)/100)
+        // print(procent_non_grace)
+        print("procent_counted")
+        print(procent_counted)
+        
+        print("procent_non_grace")
+        print(procent_non_grace)
+        
+        print("procent_grace_previous")
+        print(procent_grace_previous)
+        
+        
+        
+        
+        
+        var data_procent_count = Calendar.current.date(from: BalanceForPeriod.outcome_balance_date)
+        var data_last_pay_for_graceperiod = GetGraceLastDate(currentDate: data_procent_count!)
+       
+        currentDate = GetPreviousDate(currentDate: currentDate!)
+       
+        //PROVERKHA PROSHEL LI GRACE PERIOD
+        if(data_procent_count! < data_last_pay_for_graceperiod){
+            print("GRACE ZAKONSHILSA")
+            total_procent = procent_non_grace+procent_grace_previous
+            
+          //  currentDate = GetPreviousDate(currentDate: currentDate!)
+            
+            let request: NSFetchRequest<Procents> = Procents.fetchRequest()
+            let sort = NSSortDescriptor(key: #keyPath(Procents.time_attr), ascending: true)
+            let predicate = NSPredicate(format: "time_attr == %@", currentDate as! NSDate)
+            request.sortDescriptors = [sort]
+            request.predicate = predicate
+            
+            do {
+                
+                ProcentArray = try context.fetch(request)
+                ProcentArray[0].purchases_previous_Grace = ProcentArray[0].purchases_current_Grace
+                ProcentArray[0].purchases_current_Grace  = 0
+            } catch {
+                print("error getting data")
+            }
+            
+            
+            
+        } else {
+            total_procent = procent_counted+procent_non_grace+procent_grace_previous
+        }
+        
+        
+        
+        print("TOTAL:!")
+        print(total_procent)
+        
+         ProcentArray[0].procents = total_procent
+         
+         
+         ProcentArray[0].total_debt_out  =  ProcentArray[0].total_debt_out - total_procent
+         print(ProcentArray[0].total_debt_out)
+         var procent_strahovka = 0.89 *  ProcentArray[0].total_debt_out / 100 * -1
+         
+         procent_strahovka =  Double(round(100*procent_strahovka)/100)
+         print("STRAHOVKA")
+         print(procent_strahovka)
+         
+         ProcentArray[0].total_debt_out -= procent_strahovka
+print("BALANCE AFTER KREDIT PAY")
+        print(ProcentArray[0].total_debt_out)
+         
+         let plata_sms:Double = 59
+         
+         currentNonPurchase_previouse_Grace_Balance = procent_strahovka + plata_sms
+         
+         ProcentArray[0].nonpurchase_previous_Grace += currentNonPurchase_previouse_Grace_Balance
+         
+         previouseGraceBalance = ProcentArray[0].purchases_previous_Grace
+        
+        currentProcent = total_procent
+        print("PROCENT IS NOW \(currentProcent)")
         
         
         
@@ -622,6 +733,11 @@ class TableViewController: UITableViewController {
         
         return total_procent
     }
+    
+    
+    
+    
+    
     
     
     func CalculateProcents(){
@@ -634,7 +750,7 @@ class TableViewController: UITableViewController {
         currentDate = GetNextDate(currentDate: currentDate!)
         
         
-        for _ in 0..<current_period {
+        for _ in 0..<current_period-1 {
             
             //   print("PROCENT PO ETOY DATE: \(currentDate)")
             yesterday=GetPreviousDate(currentDate: currentDate!)
@@ -649,6 +765,7 @@ class TableViewController: UITableViewController {
             var transactionsFoundForPreviousDate = [Procents]()
             do {
                 transactionsFoundForPreviousDate =  try context.fetch(requestSearch)
+               print("Transaction for Previouse date:  \(transactionsFoundForPreviousDate[0].time_attr)")
                 //  print(transactionsFoundForPreviousDate)
             } catch {
                 print("ERROR FETCHING DATA")
@@ -656,13 +773,13 @@ class TableViewController: UITableViewController {
             
             if ( transactionsFoundForPreviousDate.count != 0){
                 
-                
+                 let requestSearch: NSFetchRequest <Procents> = Procents.fetchRequest()
                 let predicate = NSPredicate(format: "time_attr == %@", currentDate as! NSDate)
-                
+                 requestSearch.predicate = predicate
                 var transactionsFoundForCurrentDate = [Procents]()
                 do {
                     transactionsFoundForCurrentDate =  try context.fetch(requestSearch)
-                    print("TEST: \(transactionsFoundForCurrentDate[0].time_attr)")
+                    print("Transaction for current date:  \(transactionsFoundForCurrentDate[0].time_attr)")
                 } catch {
                     print("ERROR FETCHING DATA")
                 }
@@ -671,17 +788,23 @@ class TableViewController: UITableViewController {
                 
                 var procentsCurrentGrace = transactionsFoundForPreviousDate[0].purchases_current_Grace * 32.9/365/100
                 procentsCurrentGrace = Double(round(100000*procentsCurrentGrace)/100000)
-                transactionsFoundForCurrentDate[0].percent_current_Grace =  procentsCurrentGrace
+               
                 //print("PROCENT::")
-                print("Procent for this day: \(yesterday) is \(procentsCurrentGrace) \(transactionsFoundForPreviousDate[0].purchases_current_Grace)")
+                print("Procent for this day: \(yesterday) will be put in date \(currentDate) is \(procentsCurrentGrace) \(transactionsFoundForPreviousDate[0].purchases_current_Grace)")
                 //print(procent1)
                 //  transactionsFoundForPreviousDate[0]
-                
+                 transactionsFoundForCurrentDate[0].percent_current_Grace =  procentsCurrentGrace
+                print("PROCENT PREVIOUSE COUNT NOW: \(transactionsFoundForPreviousDate[0].purchases_previous_Grace) and \(transactionsFoundForPreviousDate[0].nonpurchase_previous_Grace) ")
+               
                 
                 var procentPreviousGrace = (transactionsFoundForPreviousDate[0].purchases_previous_Grace * 32.9 +
                     transactionsFoundForPreviousDate[0].nonpurchase_previous_Grace * 39.9)/100/365
+                
                 procentPreviousGrace = Double(round(100000*procentPreviousGrace)/100000)
                 transactionsFoundForCurrentDate[0].percent_previous_Grace = procentPreviousGrace
+              
+                
+                
                 print("Procent for this day PREVIOUS PERIOD: \(yesterday) is \(procentPreviousGrace) ")
                 
              /*
@@ -715,10 +838,18 @@ class TableViewController: UITableViewController {
         
         //SHOW TOTAL PROCENT FOR PAY
         
-        var totalProcent = calculateTotalProcentForPeriod(balance_incomedate: BalanceForPeriod.income_balance_date, balance_outcomedate: BalanceForPeriod.outcome_balance_date)
+        var totalProcent = calculateTotalProcentForPeriodNEW(balance_incomedate: BalanceForPeriod.income_balance_date, balance_outcomedate: BalanceForPeriod.outcome_balance_date)
         print("Total Procent: \(totalProcent)")
         
         currentGraceBalance = 0.0
+        
+        print("AFTER TOTAL PROCENT")
+        
+        print("Current Grace \(currentGraceBalance)")
+        print("Grace Previouse Period \(previouseGraceBalance)")
+        print("currentLocal_purshases_without_Grace \(current_purshases_without_Grace)")
+        print("currentLocalNonPurchase_without_Grace_Balance \(currentNonPurchase_without_Grace_Balance)")
+        print("currentLocalNonPurchase_previouse_Grace_Balance \(currentNonPurchase_previouse_Grace_Balance)")
         
         
         do{
