@@ -376,10 +376,64 @@ class TableViewController: UITableViewController {
                     print("AFTER")
                     print(currentLocalBalance)
                     
+                   /*
+                    var tmp:Double = 0
+                    if(currentLocalProcent != 0){
+                        if(transactionItem.amount_attr >= currentLocalProcent){
+                             print("PROCENT NOT NULL")
+                            tmp = transactionItem.amount_attr - currentLocalProcent
+                            currentLocalProcent = 0
+                            
+                            if(currentLocalPurshasesStandartBalance != 0){
+                                if(tmp >= currentLocalPurshasesStandartBalance){
+                                    tmp = tmp - currentLocalPurshasesStandartBalance
+                                    currentLocalPurshasesStandartBalance = 0
+                                    
+                                    if(currentLocalPreviouseGraceBalance != 0){
+                                        if( tmp >= currentLocalPreviouseGraceBalance){
+                                            tmp = transactionItem.amount_attr - currentLocalPreviouseGraceBalance
+                                            currentLocalPreviouseGraceBalance = 0
+                                        } else {
+                                            currentLocalPreviouseGraceBalance -= tmp
+                                        }
+                                        
+                                        
+                                    } else {
+                                        
+                                        if(currentLocalNonPurchase_without_Grace_Balance != 0) {
+                                            if( tmp >= currentLocalNonPurchase_without_Grace_Balance){
+                                                 tmp = transactionItem.amount_attr - currentLocalNonPurchase_without_Grace_Balance
+                                                currentLocalNonPurchase_without_Grace_Balance = 0
+                                            } else {
+                                                currentLocalNonPurchase_without_Grace_Balance -= tmp
+                                            }
+                                           
+                                        }
+                                        
+                                    }
+                                    
+                                    
+                                } else {
+                                    currentLocalPurshasesStandartBalance -= tmp
+                                }
+                                
+                                
+                            }
+                          
+                        } else {
+                            currentLocalProcent -= transactionItem.amount_attr
+                        }
+                    }
+                    
+                    
+                    
+                      procentItem.procents = currentLocalProcent
+                    procentItem.purchases_standart = currentLocalPurshasesStandartBalance
+                 procentItem.purchases_previous_Grace = currentLocalPreviouseGraceBalance
+                    procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
+                  */
+                
                  
-                  
-                    
-                    
                     if(currentLocalPreviouseGraceBalance != 0) {
                            print("NOT NULL")
                         currentLocalPreviouseGraceBalance -= transactionItem.amount_attr
@@ -407,7 +461,7 @@ class TableViewController: UITableViewController {
                         procentItem.purchases_current_Grace = currentLocalGraceBalance
                     }
                     
-                   
+ 
                     
                     
                
