@@ -95,6 +95,7 @@ class TableViewController: UITableViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateString = dateFormatter.string(from:item.time_attr as! Date)
+        
       /*
         var str = ""
         if (item.type_attr == "Пополнение") {
@@ -106,9 +107,13 @@ class TableViewController: UITableViewController {
        */
     // item.purchases_previous_Gr
 
-        cell.textLabel?.text = dateString + ": Debt out " + String(item.total_debt_out) + " CG: " + String(item.purchases_current_Grace) + " PG: " + String(item.purchases_previous_Grace) + " PbezGrace: " + String(item.purchases_without_Grace)
-        return cell
         
+      
+      
+     
+     
+        cell.textLabel?.text = dateString + ": D " + String(item.total_debt_out) + " CG: " + String(item.purchases_current_Grace) + " PG: " + String(item.purchases_previous_Grace) + " PBG: " + String(item.purchases_without_Grace) + "PST: " + String(item.purchases_standart) + "NPG: " + String(item.nonpurchase_previous_Grace) + " NWG: " + String(item.nonpurchase_without_Grace) + " PR_CUR: " +  String(item.percent_current_Grace) + " PR_PREV_G: " + String(item.percent_previous_Grace) + " PR_WITHOUT_GR: " + String(item.percent_without_Grace)
+        return cell
     }
     
   
@@ -429,6 +434,10 @@ class TableViewController: UITableViewController {
             print("currentLocalNonPurchase_previouse_Grace_Balance \(currentLocalNonPurchase_previouse_Grace_Balance)")
        
             
+            if( currentLocalBalance < (-1) * BalanceForPeriod.credit_limit) {
+                print("SVERH LIMIT IN CHECKPAYMENT")
+            }
+            
             //////
             
             
@@ -602,15 +611,28 @@ class TableViewController: UITableViewController {
         
         
         
+        print("BALANCE BEFORE PROCENT")
+        print(ProcentArray[0].total_debt_out)
+        
+        
         print("TOTAL:!")
         print(total_procent)
         
          ProcentArray[0].procents = total_procent
          
-         
+     
+        
          ProcentArray[0].total_debt_out  =  ProcentArray[0].total_debt_out - total_procent
-         print(ProcentArray[0].total_debt_out)
-         var procent_strahovka = 0.89 *  ProcentArray[0].total_debt_out / 100 * -1
+        print("BALANCE after procent minus")
+        print(ProcentArray[0].total_debt_out)
+     /*
+        if( ProcentArray[0].total_debt_out < (-1) * BalanceForPeriod.credit_limit) {
+            print("SVERH LIMIT!!!")
+            ProcentArray[0].total_debt_out -= 390
+        }
+       */
+        
+        var procent_strahovka = 0.89 *  ProcentArray[0].total_debt_out / 100 * -1
          
          procent_strahovka =  Double(round(100*procent_strahovka)/100)
          print("STRAHOVKA")
@@ -655,10 +677,10 @@ print("BALANCE AFTER KREDIT PAY")
         var yesterday = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
         
      
-        currentDate = GetNextDate(currentDate: currentDate!)
+        //currentDate = GetNextDate(currentDate: currentDate!)
         
         
-        for _ in 0..<current_period-1 {
+        for _ in 0..<current_period {
           print("\n")
              print("PROCENT PO ETOY DATE: \(currentDate)")
             yesterday=GetPreviousDate(currentDate: currentDate!)
@@ -731,8 +753,8 @@ print("BALANCE AFTER KREDIT PAY")
                 
                 //print(transactionsFoundForPreviousDate[0].purchases_current_Grace)
             } else {
-                print("data not found for this date!!!!! SO GO NEXT DAY, MAY BE IT IS FIRST MONTH")
-                   currentDate = GetNextDate(currentDate: currentDate!)
+                print("data not found for this date!!!!! SO GO NEXT DAY, MAY BE IT IS FIRST DAY OF FIRST MONTH")
+                  // currentDate = GetNextDate(currentDate: currentDate!)
             }
             //////////
             
