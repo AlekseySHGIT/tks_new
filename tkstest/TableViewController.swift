@@ -35,6 +35,7 @@ class TableViewController: UITableViewController {
     var foundProcentDataArray = [Procents]()
     var BalanceForPeriod = Balance()
     var LastDayForPayInGracePeriod = Date()
+    var gracePeriodIsActive:Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -52,11 +53,11 @@ class TableViewController: UITableViewController {
             amount_of_expenses: 0,
             amount_of_receipts: 0)
         
-        
+        gracePeriodIsActive = true
         var b = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
         LastDayForPayInGracePeriod = GetGraceLastDate(currentDate: b!)
         
-        
+        print("GRACE LAST DAY IS:::: \(LastDayForPayInGracePeriod)")
         
         //особый случай для самой первой покупки, подумать может быть ошибка для будущих
         if(BalanceForPeriod.income_balance == 0.00 && (BalanceForPeriod.data_fist_payment.day! > BalanceForPeriod.income_balance_date.day!)){
@@ -112,7 +113,7 @@ class TableViewController: UITableViewController {
       
      
      
-        cell.textLabel?.text = dateString + ": D " + String(item.total_debt_out) + " CG: " + String(item.purchases_current_Grace) + " PG: " + String(item.purchases_previous_Grace) + " PBG: " + String(item.purchases_without_Grace) + "PST: " + String(item.purchases_standart) + "NPG: " + String(item.nonpurchase_previous_Grace) + " NWG: " + String(item.nonpurchase_without_Grace) + " PR_CUR: " +  String(item.percent_current_Grace) + " PR_PREV_G: " + String(item.percent_previous_Grace) + " PR_WITHOUT_GR: " + String(item.percent_without_Grace)
+        cell.textLabel?.text = dateString + ": D " + String(item.total_debt_out) + " CG: " + String(item.purchases_current_Grace) + " PG: " + String(item.purchases_previous_Grace) + " PBG: " + String(item.purchases_without_Grace) + "PST: " + String(item.purchases_standart) + "NPG: " + String(item.nonpurchase_previous_Grace) + " NWG: " + String(item.nonpurchase_without_Grace) + " PR_CUR: " +  String(item.percent_current_Grace) + " PR_PREV_G: " + String(item.percent_previous_Grace) + " PR_W_GR: " + String(item.percent_without_Grace) + " P: " + String(item.procents)
         return cell
     }
     
@@ -145,6 +146,9 @@ class TableViewController: UITableViewController {
                 data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
                 amount_of_expenses: 0,
                 amount_of_receipts: 0)
+           
+           
+            
             
             FillProcentTableWithData()
             
@@ -367,6 +371,7 @@ class TableViewController: UITableViewController {
                         procentItem.purchases_current_Grace = currentLocalGraceBalance
                     }
                     
+                   
                     
                     
                
@@ -386,43 +391,66 @@ class TableViewController: UITableViewController {
            
         }
          
-           
-         procentItem.nonpurchase_previous_Grace =   currentLocalNonPurchase_previouse_Grace_Balance
+            
+            procentItem.nonpurchase_previous_Grace =   currentLocalNonPurchase_previouse_Grace_Balance
             procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
             procentItem.purchases_current_Grace = currentLocalGraceBalance
-           // procentItem.nonpurchase_previous_Grace = currentpreviouseGraceBalance
+            // procentItem.nonpurchase_previous_Grace = currentpreviouseGraceBalance
             procentItem.purchases_previous_Grace =   currentLocalPreviouseGraceBalance
             //procentItem.purchases_previous_Grace = currentPur
             ////// RAZOBRATSA V ETOM KUSKE
-             procentItem.purchases_without_Grace = currentLocal_purshases_without_Grace
+            procentItem.purchases_without_Grace = currentLocal_purshases_without_Grace
+            print("TRY TO CHECK GRACE PERIOD last date is \(LastDayForPayInGracePeriod) and current date is \(currentDate)")
+           
             if(LastDayForPayInGracePeriod == currentDate && (currentLocalPreviouseGraceBalance != 0 || currentNonPurchase_without_Grace_Balance != 0)){
                 print("GRACE DATE IS HERE: \(currentDate)")
-         currentLocal_purshases_without_Grace =  currentLocalPreviouseGraceBalance
-            
+                currentLocal_purshases_without_Grace =  currentLocalPreviouseGraceBalance
+                
                 
                 procentItem.purchases_without_Grace = currentLocal_purshases_without_Grace
-            currentLocalPreviouseGraceBalance = 0
-            procentItem.purchases_previous_Grace = 0
-           
+                currentLocalPreviouseGraceBalance = 0
+                procentItem.purchases_previous_Grace = 0
+                
                 currentLocalNonPurchase_without_Grace_Balance  += currentLocalNonPurchase_previouse_Grace_Balance
                 currentLocalNonPurchase_previouse_Grace_Balance = 0
                 print("SHOULD BE 65000")
                 print(currentLocalNonPurchase_without_Grace_Balance)
                 //  currentLocalNonPurchase_previouse_Grace_Balance = 0
-             print("1034 WILL BE 0")
-               
+                print("1034 WILL BE 0")
+                
                 procentItem.nonpurchase_previous_Grace = currentLocalNonPurchase_previouse_Grace_Balance
-            
+                
                 
                 
                 procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
-               procentItem.nonpurchase_previous_Grace = currentLocalNonPurchase_previouse_Grace_Balance
-            
-               
-               
-            
-           // currentLocalNonPurchase_without_Grace_Balance =  procentItem.nonpurchase_without_Grace
-              
+                procentItem.nonpurchase_previous_Grace = currentLocalNonPurchase_previouse_Grace_Balance
+                
+                
+                
+                
+                // currentLocalNonPurchase_without_Grace_Balance =  procentItem.nonpurchase_without_Grace
+                
+                //esli pogashen ves dolg v grace period
+                if(currentBalance >= 0){
+                    //zapros novoy dati dlya grace
+                    print("DOLG POGASHEN")
+                    gracePeriodIsActive = true
+                    
+                    //esli grace bil pogashen ranshe to formiruem novyu datu dlya grace
+                    
+                        print("GRACE POGASHEN FORMIRUEM NOVYU DATU")
+                        var b = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
+                        LastDayForPayInGracePeriod = GetGraceLastDate(currentDate: b!)
+                        
+                        print("GRACE LAST DAY IS:::: \(LastDayForPayInGracePeriod)")
+                   
+                    
+                    
+                } else {
+                    print("DOLG V GRACE NE POGASHEN")
+                    gracePeriodIsActive = false
+                }
+                
             }
             print("")
             print("BALANCE: ")
@@ -430,9 +458,9 @@ class TableViewController: UITableViewController {
             print("Current Grace \(currentLocalGraceBalance)")
             print("Grace Previouse Period \(currentLocalPreviouseGraceBalance)")
             print("currentLocal_purshases_without_Grace \(currentLocal_purshases_without_Grace)")
-             print("currentLocalNonPurchase_without_Grace_Balance \(currentLocalNonPurchase_without_Grace_Balance)")
+            print("currentLocalNonPurchase_without_Grace_Balance \(currentLocalNonPurchase_without_Grace_Balance)")
             print("currentLocalNonPurchase_previouse_Grace_Balance \(currentLocalNonPurchase_previouse_Grace_Balance)")
-       
+            
             
             if( currentLocalBalance < (-1) * BalanceForPeriod.credit_limit) {
                 print("SVERH LIMIT IN CHECKPAYMENT")
@@ -442,7 +470,7 @@ class TableViewController: UITableViewController {
             
             
             
-        return (currentLocalBalance,currentLocalNonPurchase_without_Grace_Balance,currentLocalGraceBalance,currentLocalPreviouseGraceBalance,currentLocalProcent,currentLocalNonPurchase_previouse_Grace_Balance,currentLocal_purshases_without_Grace)
+            return (currentLocalBalance,currentLocalNonPurchase_without_Grace_Balance,currentLocalGraceBalance,currentLocalPreviouseGraceBalance,currentLocalProcent,currentLocalNonPurchase_previouse_Grace_Balance,currentLocal_purshases_without_Grace)
     }
     
     
@@ -452,7 +480,7 @@ class TableViewController: UITableViewController {
     var currentProcent:Double = 0
     var currentNonPurchase_previouse_Grace_Balance:Double = 0
     var current_purshases_without_Grace:Double = 0
-   
+    var procent_previouse_period:Double = 0
     func FillProcentTableWithData(){
         
        
@@ -558,11 +586,19 @@ class TableViewController: UITableViewController {
         
         procent_counted = Double(round(100*procent_counted)/100)
         //print(procent_counted)
+       
         procent_grace_previous = Double(round(100*procent_grace_previous)/100)
         //  print(procent_grace_previous)
         
         procent_non_grace = Double(round(100*procent_non_grace)/100)
         // print(procent_non_grace)
+       
+        if(gracePeriodIsActive == true){
+            procent_previouse_period = procent_counted
+            print("procent_previouse_counted")
+            print(procent_previouse_period)
+        }
+        
         print("procent_counted")
         print(procent_counted)
         
@@ -580,10 +616,21 @@ class TableViewController: UITableViewController {
         var data_last_pay_for_graceperiod = GetGraceLastDate(currentDate: data_procent_count!)
        
         currentDate = GetPreviousDate(currentDate: currentDate!)
-       
+    
+        
+        
+      //  var oneMonthAgo = thisDayOneMonthEarlier(currentDate: Calendar.current.date(from: BalanceForPeriod.outcome_balance_date)!, value: -1)
+       // print("zzz")
+        //print(oneMonthAgo)
+        //LastDayForPayInGracePeriod = GetGraceLastDate(currentDate: oneMonthAgo)
+        //print(LastDayForPayInGracePeriod)
+        
+            print("PERIOD DO: \(data_procent_count) and GRACE LAST DAY IS \(LastDayForPayInGracePeriod)")
+        
         //PROVERKHA PROSHEL LI GRACE PERIOD
-        if(data_procent_count! < data_last_pay_for_graceperiod){
-            print("GRACE ZAKONSHILSA")
+      
+        if(gracePeriodIsActive == true){
+            print("GRACE PERIOD NE OKONSHEN POETOMY NE COUNT TEKUSHIE PROCENTI")
             total_procent = procent_non_grace+procent_grace_previous
             
           //  currentDate = GetPreviousDate(currentDate: currentDate!)
@@ -606,7 +653,8 @@ class TableViewController: UITableViewController {
             
             
         } else {
-            total_procent = procent_counted+procent_non_grace+procent_grace_previous
+           print("NON GRACE PERIOD")
+            total_procent = procent_previouse_period+procent_non_grace+procent_grace_previous
         }
         
         
