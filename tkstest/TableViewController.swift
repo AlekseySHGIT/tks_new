@@ -392,6 +392,7 @@ class TableViewController: UITableViewController {
                                 currentTransactionItem = 0
                                 
                                 
+                                
                             //popolnenit bolshe procenta
                             case _ where (currentTransactionItem > currentLocalProcent && currentLocalProcent != 0):
                                 print("currentTransactionItem > currentLocalProcent && currentLocalProcent != 0")
