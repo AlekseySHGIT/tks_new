@@ -324,7 +324,7 @@ class TableViewController: UITableViewController {
                         print("FOUND PLATA")
                         procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
                         currentLocalBalance = procentItem.total_debt_out
-                    case "Выдача":
+                    case "Выдача","Перевод":
                         print("FOUND nalichnie vidashs")
                         procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
                         currentLocalBalance = procentItem.total_debt_out
@@ -348,7 +348,7 @@ class TableViewController: UITableViewController {
                         
                         currentLocalGraceBalance = currentLocalGraceBalance +  transactionItem.amount_attr
                         procentItem.purchases_current_Grace = currentLocalGraceBalance
-                        
+                   /*
                     case "Перевод":
                         print("FOUND PEREVOD")
                         procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
@@ -356,7 +356,7 @@ class TableViewController: UITableViewController {
                         
                         currentLocalGraceBalance = currentLocalGraceBalance +  transactionItem.amount_attr
                         procentItem.purchases_current_Grace = currentLocalGraceBalance
-                        
+                   */
                         
                     case "Пополнение":
                         
@@ -383,7 +383,10 @@ class TableViewController: UITableViewController {
                         while(currentTransactionItem > 0){
                             
                             switch currentTransactionItem {
-                            //popolnenie menshe procenta
+                            
+                            
+                            
+                            //currentLocalProcent
                             case _ where (currentTransactionItem < currentLocalProcent && currentLocalProcent != 0):
                                 //SKOREE PRAVILNO
                                 print("transactionItem.amount_attr < currentLocalProcent && currentLocalProcent != 0")
@@ -399,12 +402,16 @@ class TableViewController: UITableViewController {
                                 currentTransactionItem -= currentLocalProcent
                                 currentLocalProcent = 0
                                 procentItem.procents = 0
+                         
+                                
+                                
+                                //currentLocalPurshasesStandartBalance
                                 
                             case _ where (currentTransactionItem < currentLocalPurshasesStandartBalance && currentLocalPurshasesStandartBalance != 0):
-                            //SKOREE PRAVILNIY
+                                //SKOREE PRAVILNIY
                                 print("currentTransactionItem < currentPurshasesStandartBalance && currentPurshasesStandartBalance != 0")
-                            currentLocalPurshasesStandartBalance -= currentTransactionItem
-                           
+                                currentLocalPurshasesStandartBalance -= currentTransactionItem
+                                
                                 procentItem.purchases_standart = currentLocalPurshasesStandartBalance
                                 currentTransactionItem = 0
                                 
@@ -415,9 +422,9 @@ class TableViewController: UITableViewController {
                                 currentLocalPurshasesStandartBalance = 0
                                 procentItem.purchases_standart = 0
                                 
+                               
                                 
-                          
-                                
+                            //currentLocal_purshases_without_Grace
                             case _ where (currentTransactionItem < currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0):
                                 //SKOREE PRAVILNIY
                                 print("currentTransactionItem < currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0")
@@ -435,7 +442,8 @@ class TableViewController: UITableViewController {
                                 
                                 
                                 
-                            //PREVIOUSE GRACE BALANCE
+                                
+                            //currentLocalPreviouseGraceBalance
                             case _ where (currentTransactionItem > currentLocalPreviouseGraceBalance && currentLocalPreviouseGraceBalance != 0):
                                 print("currentTransactionItem > currentLocalPreviouseGraceBalance && currentLocalPreviouseGraceBalance != 0")
                                 
@@ -445,15 +453,20 @@ class TableViewController: UITableViewController {
                                 
                                 
                             case _ where (currentTransactionItem < currentLocalPreviouseGraceBalance && currentLocalPreviouseGraceBalance != 0):
-                               //PROVERIT PRAVILNIY LI
+                                //PROVERIT PRAVILNIY LI
                                 print("currentTransactionItem < currentLocalPreviouseGraceBalance && currentLocalPreviouseGraceBalance != 0")
                                 
-                             currentLocalPreviouseGraceBalance -= currentTransactionItem
-                               
+                                currentLocalPreviouseGraceBalance -= currentTransactionItem
+                                
                                 procentItem.purchases_previous_Grace = currentLocalPreviouseGraceBalance
                                 currentTransactionItem = 0
                                 
                                 
+                          
+                                
+                          
+                                
+                           
                                 //current GRACE
                                 
                             case _ where (currentTransactionItem > currentLocalGraceBalance && currentLocalGraceBalance != 0):
@@ -478,8 +491,8 @@ class TableViewController: UITableViewController {
                                 
                                 
                                 
-                                //NON GRACE obrabativaem poslednim vsegda!
-                                //NON GRACE PREVIOUSE
+                               
+                                //currentLocalNonPurchase_previouse_Grace_Balance
                            
                             case _ where (currentTransactionItem > currentLocalNonPurchase_previouse_Grace_Balance && currentLocalNonPurchase_previouse_Grace_Balance != 0):
                                 print("currentTransactionItem > currentLocalNonPurchase_previouse_Grace_Balance && currentLocalNonPurchase_previouse_Grace_Balance != 0")
@@ -501,7 +514,7 @@ class TableViewController: UITableViewController {
                                 //
                                 
                                 
-                                
+                             //currentLocalNonPurchase_without_Grace_Balance
                             case _ where (currentTransactionItem > currentLocalNonPurchase_without_Grace_Balance && currentLocalNonPurchase_without_Grace_Balance != 0):
                                 print("currentTransactionItem > currentLocalNonPurchase_without_Grace_Balance && currentLocalNonPurchase_without_Grace_Balance != 0")
                                 
