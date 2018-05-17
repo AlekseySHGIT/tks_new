@@ -424,7 +424,7 @@ class TableViewController: UITableViewController {
                                 
                                
                                 
-                            //currentLocal_purshases_without_Grace
+                            // тт currentLocal_purshases_without_Grace
                             case _ where (currentTransactionItem < currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0):
                                 //SKOREE PRAVILNIY
                                 print("currentTransactionItem < currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0")
