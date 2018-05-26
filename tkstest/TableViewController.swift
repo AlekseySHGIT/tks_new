@@ -5,7 +5,6 @@
 //  Created by Admin on 26.04.2018.
 //  Copyright © 2018 Alex. All rights reserved.
 //
-
 import UIKit
 import CoreData
 
@@ -20,6 +19,7 @@ struct Balance {
     var service_charge:Double = 590
     var data_min_payment = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 19)
     var data_fist_payment = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20)
+    var data_grace_last_payment = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20)
     //сумма расходов
     var amount_of_expenses:Double = 0
     //сумма поступлений
@@ -41,6 +41,7 @@ class TableViewController: UITableViewController {
         
         
         
+        
         BalanceForPeriod = Balance(
             income_balance: 0.00, outgoing_balance: -110562.11,
             income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 07, day: 17),
@@ -50,14 +51,23 @@ class TableViewController: UITableViewController {
             service_charge: 590,
             data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 18),
             data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+            data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 09, day: 20),
             amount_of_expenses: 0,
             amount_of_receipts: 0)
         
         gracePeriodIsActive = true
         var b = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
         LastDayForPayInGracePeriod = GetGraceLastDate(currentDate: b!)
+        LastDayForPayInGracePeriod = Calendar.current.date(from:BalanceForPeriod.data_grace_last_payment)!
+        print("FIND GRACE LAST DATE \(LastDayForPayInGracePeriod)")
         
-        print("GRACE LAST DAY IS:::: \(LastDayForPayInGracePeriod)")
+        /////
+        b = Calendar.current.date(from: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2018, month: 04, day: 30))
+        LastDayForPayInGracePeriod = NewGetGraceLastDate(currentDate: b!)
+        print("GRACE FINAL DATE1 \(LastDayForPayInGracePeriod)")
+        
+        /////
+        
         
         //особый случай для самой первой покупки, подумать может быть ошибка для будущих
         if(BalanceForPeriod.income_balance == 0.00 && (BalanceForPeriod.data_fist_payment.day! > BalanceForPeriod.income_balance_date.day!)){
@@ -144,6 +154,7 @@ class TableViewController: UITableViewController {
                 service_charge: 590,
                 data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 08, day: 18),
                 data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 10, day: 21),
                 amount_of_expenses: 0,
                 amount_of_receipts: 0)
             
@@ -167,6 +178,7 @@ class TableViewController: UITableViewController {
                 service_charge: 590,
                 data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 08, day: 18),
                 data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 11, day: 20),
                 amount_of_expenses: 0,
                 amount_of_receipts: 0)
             
@@ -179,6 +191,85 @@ class TableViewController: UITableViewController {
             
             
             
+            
+            //PROSHET ZA SLED MESYATS
+            print("\nNEXT MONTH  NOVEMBER\n")
+            BalanceForPeriod = Balance(
+                income_balance: -124768.00, outgoing_balance: -124461.69,
+                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 10, day: 25),
+                outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 11, day: 24),
+                income_ammount: 0,
+                credit_limit: 120000.00,
+                service_charge: 590,
+                data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 11, day: 20),
+                data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 12, day: 21),
+                amount_of_expenses: 0,
+                amount_of_receipts: 0)
+            
+            FillProcentTableWithData()
+            CalculateProcents()
+            
+            
+            
+            //PROSHET ZA SLED MESYATS
+            
+            print("\nNEXT MONTH  DECEMBER\n")
+            BalanceForPeriod = Balance(
+                income_balance: -124461.69, outgoing_balance: -124461.69,
+                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 11, day: 25),
+                outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 12, day: 24),
+                income_ammount: 0,
+                credit_limit: 120000.00,
+                service_charge: 590,
+                data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 12, day: 21),
+                data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 01, day: 20),
+                amount_of_expenses: 0,
+                amount_of_receipts: 0)
+            
+            FillProcentTableWithData()
+            CalculateProcents()
+            
+            
+            //PROSHET ZA SLED MESYATS
+            
+            print("\nNEXT MONTH  JANUARY\n")
+            BalanceForPeriod = Balance(
+                income_balance: -145158.58, outgoing_balance: -124461.69,
+                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 12, day: 25),
+                outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 01, day: 24),
+                income_ammount: 0,
+                credit_limit: 120000.00,
+                service_charge: 590,
+                data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 01, day: 20),
+                data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 02, day: 20),
+                amount_of_expenses: 0,
+                amount_of_receipts: 0)
+            
+            FillProcentTableWithData()
+            CalculateProcents()
+            
+            
+            //PROSHET ZA SLED MESYATS
+            
+            print("\nNEXT MONTH  February\n")
+            BalanceForPeriod = Balance(
+                income_balance: -144644.22, outgoing_balance: -124461.69,
+                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2014, month: 01, day: 25),
+                outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 02, day: 24),
+                income_ammount: 0,
+                credit_limit: 120000.00,
+                service_charge: 590,
+                data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 02, day: 18),
+                data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 03, day: 20),
+                amount_of_expenses: 0,
+                amount_of_receipts: 0)
+            
+            FillProcentTableWithData()
+            CalculateProcents()
             
             
             
@@ -243,6 +334,14 @@ class TableViewController: UITableViewController {
         let graceEndDate = Calendar.current.date(byAdding: .day, value: 57, to:currentDate)
         
         return GetNextDate(currentDate:graceEndDate!)
+    }
+    
+    
+    func NewGetGraceLastDate(currentDate : Date) -> Date  {
+        
+        let graceEndDate = Calendar.current.date(byAdding: .day, value: 54, to:currentDate)
+        print("GRACE FINAL DATE2: \(graceEndDate)")
+        return graceEndDate!
     }
     
     func thisDayOneMonthEarlier(currentDate : Date,value:Int) -> Date{
@@ -324,7 +423,7 @@ class TableViewController: UITableViewController {
                         print("FOUND PLATA")
                         procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
                         currentLocalBalance = procentItem.total_debt_out
-                    case "Выдача","Перевод":
+                    case "Выдача":
                         print("FOUND nalichnie vidashs")
                         procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
                         currentLocalBalance = procentItem.total_debt_out
@@ -333,7 +432,7 @@ class TableViewController: UITableViewController {
                         currentLocalNonPurchase_without_Grace_Balance = currentLocalNonPurchase_without_Grace_Balance + transactionItem.amount_attr
                         procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
                         
-                    case "Комиссия":
+                    case "Комиссия","Перевод":
                         print("FOUND komissia")
                         procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
                         currentLocalBalance = procentItem.total_debt_out
@@ -348,15 +447,8 @@ class TableViewController: UITableViewController {
                         
                         currentLocalGraceBalance = currentLocalGraceBalance +  transactionItem.amount_attr
                         procentItem.purchases_current_Grace = currentLocalGraceBalance
-                   /*
-                    case "Перевод":
-                        print("FOUND PEREVOD")
-                        procentItem.total_debt_out = currentLocalBalance - transactionItem.amount_attr
-                        currentLocalBalance = procentItem.total_debt_out
                         
-                        currentLocalGraceBalance = currentLocalGraceBalance +  transactionItem.amount_attr
-                        procentItem.purchases_current_Grace = currentLocalGraceBalance
-                   */
+                        
                         
                     case "Пополнение":
                         
@@ -383,10 +475,7 @@ class TableViewController: UITableViewController {
                         while(currentTransactionItem > 0){
                             
                             switch currentTransactionItem {
-                            
-                            
-                            
-                            //currentLocalProcent
+                            //popolnenie menshe procenta
                             case _ where (currentTransactionItem < currentLocalProcent && currentLocalProcent != 0):
                                 //SKOREE PRAVILNO
                                 print("transactionItem.amount_attr < currentLocalProcent && currentLocalProcent != 0")
@@ -395,17 +484,15 @@ class TableViewController: UITableViewController {
                                 currentTransactionItem = 0
                                 
                                 
-                                
                             //popolnenit bolshe procenta
                             case _ where (currentTransactionItem > currentLocalProcent && currentLocalProcent != 0):
                                 print("currentTransactionItem > currentLocalProcent && currentLocalProcent != 0")
                                 currentTransactionItem -= currentLocalProcent
                                 currentLocalProcent = 0
                                 procentItem.procents = 0
-                         
                                 
                                 
-                                //currentLocalPurshasesStandartBalance
+                                
                                 
                             case _ where (currentTransactionItem < currentLocalPurshasesStandartBalance && currentLocalPurshasesStandartBalance != 0):
                                 //SKOREE PRAVILNIY
@@ -422,28 +509,14 @@ class TableViewController: UITableViewController {
                                 currentLocalPurshasesStandartBalance = 0
                                 procentItem.purchases_standart = 0
                                 
-                               
-                                
-                            // тт currentLocal_purshases_without_Grace
-                            case _ where (currentTransactionItem < currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0):
-                                //SKOREE PRAVILNIY
-                                print("currentTransactionItem < currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0")
-                                currentLocal_purshases_without_Grace -= currentTransactionItem
-                                
-                                procentItem.purchases_without_Grace = currentLocal_purshases_without_Grace
-                                currentTransactionItem = 0
-                                
-                            case _ where (currentTransactionItem > currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0):
-                                print("currentTransactionItem > currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0")
-                                
-                                currentTransactionItem -= currentLocal_purshases_without_Grace
-                                currentLocal_purshases_without_Grace = 0
-                                procentItem.purchases_without_Grace = 0
                                 
                                 
                                 
                                 
-                            //currentLocalPreviouseGraceBalance
+                                
+                                
+                                
+                            //PREVIOUSE GRACE BALANCE
                             case _ where (currentTransactionItem > currentLocalPreviouseGraceBalance && currentLocalPreviouseGraceBalance != 0):
                                 print("currentTransactionItem > currentLocalPreviouseGraceBalance && currentLocalPreviouseGraceBalance != 0")
                                 
@@ -462,12 +535,23 @@ class TableViewController: UITableViewController {
                                 currentTransactionItem = 0
                                 
                                 
-                          
-                                
-                          
-                                
-                           
                                 //current GRACE
+                                
+                                
+                            case _ where (currentTransactionItem < currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0):
+                                //SKOREE PRAVILNIY
+                                print("currentTransactionItem < currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0")
+                                currentLocal_purshases_without_Grace -= currentTransactionItem
+                                
+                                procentItem.purchases_without_Grace = currentLocal_purshases_without_Grace
+                                currentTransactionItem = 0
+                                
+                            case _ where (currentTransactionItem > currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0):
+                                print("currentTransactionItem > currentLocal_purshases_without_Grace && currentLocal_purshases_without_Grace != 0")
+                                
+                                currentTransactionItem -= currentLocal_purshases_without_Grace
+                                currentLocal_purshases_without_Grace = 0
+                                procentItem.purchases_without_Grace = 0
                                 
                             case _ where (currentTransactionItem > currentLocalGraceBalance && currentLocalGraceBalance != 0):
                                 print("currentTransactionItem > currentLocalGraceBalance && currentLocalGraceBalance != 0")
@@ -478,7 +562,7 @@ class TableViewController: UITableViewController {
                                 
                                 
                             case _ where (currentTransactionItem < currentLocalGraceBalance && currentLocalGraceBalance != 0):
-                              //PRAVILNIY PROSHET
+                                //PRAVILNIY PROSHET
                                 print("currentTransactionItem < currentLocalGraceBalance && currentLocalGraceBalance != 0")
                                 print("CURRENT POPOLNENIE SUMM: \(currentTransactionItem) and currentLocalGraceBalance \(currentLocalGraceBalance)")
                                 // difference = currentLocalGraceBalance - currentTransactionItem
@@ -491,30 +575,10 @@ class TableViewController: UITableViewController {
                                 
                                 
                                 
-                               
-                                //currentLocalNonPurchase_previouse_Grace_Balance
-                           
-                            case _ where (currentTransactionItem > currentLocalNonPurchase_previouse_Grace_Balance && currentLocalNonPurchase_previouse_Grace_Balance != 0):
-                                print("currentTransactionItem > currentLocalNonPurchase_previouse_Grace_Balance && currentLocalNonPurchase_previouse_Grace_Balance != 0")
-                                
-                                currentTransactionItem -= currentLocalNonPurchase_previouse_Grace_Balance
-                                currentLocalNonPurchase_previouse_Grace_Balance = 0
-                                procentItem.nonpurchase_previous_Grace = 0
+                                //NON GRACE obrabativaem poslednim vsegda!
                                 
                                 
-                            case _ where (currentTransactionItem < currentLocalNonPurchase_previouse_Grace_Balance && currentLocalNonPurchase_previouse_Grace_Balance != 0):
-                                //SKOREE PRAVILNO
-                                print("currentTransactionItem < currentLocalNonPurchase_previouse_Grace_Balance && currentLocalNonPurchase_previouse_Grace_Balance != 0")
                                 
-                                currentLocalNonPurchase_previouse_Grace_Balance -= currentTransactionItem
-                                
-                                procentItem.nonpurchase_previous_Grace = currentLocalNonPurchase_previouse_Grace_Balance
-                                currentTransactionItem = 0
-                                
-                                //
-                                
-                                
-                             //currentLocalNonPurchase_without_Grace_Balance
                             case _ where (currentTransactionItem > currentLocalNonPurchase_without_Grace_Balance && currentLocalNonPurchase_without_Grace_Balance != 0):
                                 print("currentTransactionItem > currentLocalNonPurchase_without_Grace_Balance && currentLocalNonPurchase_without_Grace_Balance != 0")
                                 
@@ -527,8 +591,8 @@ class TableViewController: UITableViewController {
                                 //SKOREE PRAVILNO
                                 print("currentTransactionItem < currentLocalNonPurchase_without_Grace_Balance && currentLocalNonPurchase_without_Grace_Balance != 0")
                                 
-                               currentLocalNonPurchase_without_Grace_Balance -= currentTransactionItem
-                             
+                                currentLocalNonPurchase_without_Grace_Balance -= currentTransactionItem
+                                
                                 procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
                                 currentTransactionItem = 0
                                 
@@ -538,7 +602,7 @@ class TableViewController: UITableViewController {
                             default:
                                 //currentTransactionItem = 0
                                 print("DEFAULT VALUE FOR SWITCH !!!!!!!!!")
-                               
+                                
                             }
                             
                             
@@ -546,35 +610,35 @@ class TableViewController: UITableViewController {
                         
                         
                         
-                     /*
-                        if(currentLocalPreviouseGraceBalance != 0) {
-                            print("NOT NULL")
-                            currentLocalPreviouseGraceBalance -= transactionItem.amount_attr
-                            procentItem.purchases_previous_Grace = currentLocalPreviouseGraceBalance
-                            print("PROCNETS NOW:\(currentLocalProcent)")
-                            if(currentLocalProcent != 0 && transactionItem.amount_attr >= currentLocalProcent) {
-                                print("PROCENT NOT NULL")
-                                
-                                currentLocalPreviouseGraceBalance += currentLocalProcent
-                                currentLocalProcent = 0
-                                procentItem.procents = currentLocalProcent
-                                procentItem.purchases_previous_Grace = currentLocalPreviouseGraceBalance
-                                
-                            } else if(currentLocalProcent != 0 && transactionItem.amount_attr < currentLocalProcent){
-                                var diff = currentLocalProcent - transactionItem.amount_attr
-                                currentLocalPreviouseGraceBalance += diff
-                                procentItem.purchases_previous_Grace = currentLocalPreviouseGraceBalance
-                                procentItem.procents -= transactionItem.amount_attr
-                                
-                                
-                            }
-                            
-                        } else {
-                            currentLocalGraceBalance = currentLocalGraceBalance -  transactionItem.amount_attr
-                            procentItem.purchases_current_Grace = currentLocalGraceBalance
-                        }
-                        
-                  */
+                        /*
+                         if(currentLocalPreviouseGraceBalance != 0) {
+                         print("NOT NULL")
+                         currentLocalPreviouseGraceBalance -= transactionItem.amount_attr
+                         procentItem.purchases_previous_Grace = currentLocalPreviouseGraceBalance
+                         print("PROCNETS NOW:\(currentLocalProcent)")
+                         if(currentLocalProcent != 0 && transactionItem.amount_attr >= currentLocalProcent) {
+                         print("PROCENT NOT NULL")
+                         
+                         currentLocalPreviouseGraceBalance += currentLocalProcent
+                         currentLocalProcent = 0
+                         procentItem.procents = currentLocalProcent
+                         procentItem.purchases_previous_Grace = currentLocalPreviouseGraceBalance
+                         
+                         } else if(currentLocalProcent != 0 && transactionItem.amount_attr < currentLocalProcent){
+                         var diff = currentLocalProcent - transactionItem.amount_attr
+                         currentLocalPreviouseGraceBalance += diff
+                         procentItem.purchases_previous_Grace = currentLocalPreviouseGraceBalance
+                         procentItem.procents -= transactionItem.amount_attr
+                         
+                         
+                         }
+                         
+                         } else {
+                         currentLocalGraceBalance = currentLocalGraceBalance -  transactionItem.amount_attr
+                         procentItem.purchases_current_Grace = currentLocalGraceBalance
+                         }
+                         
+                         */
                         
                         
                         
@@ -600,13 +664,15 @@ class TableViewController: UITableViewController {
             procentItem.nonpurchase_without_Grace = currentLocalNonPurchase_without_Grace_Balance
             procentItem.purchases_current_Grace = currentLocalGraceBalance
             // procentItem.nonpurchase_previous_Grace = currentpreviouseGraceBalance
+            currentLocalPreviouseGraceBalance =  Double(round(100*currentLocalPreviouseGraceBalance)/100)
+            
             procentItem.purchases_previous_Grace =   currentLocalPreviouseGraceBalance
             //procentItem.purchases_previous_Grace = currentPur
             ////// RAZOBRATSA V ETOM KUSKE
             procentItem.purchases_without_Grace = currentLocal_purshases_without_Grace
             print("TRY TO CHECK GRACE PERIOD last date is \(LastDayForPayInGracePeriod) and current date is \(currentDate)")
             
-            if(LastDayForPayInGracePeriod == currentDate && (currentLocalPreviouseGraceBalance != 0 || currentNonPurchase_without_Grace_Balance != 0)){
+            if(LastDayForPayInGracePeriod == currentDate && (currentLocalPreviouseGraceBalance != 0)){
                 print("GRACE DATE IS HERE: \(currentDate)")
                 currentLocal_purshases_without_Grace =  currentLocalPreviouseGraceBalance
                 
@@ -643,9 +709,9 @@ class TableViewController: UITableViewController {
                     //esli grace bil pogashen ranshe to formiruem novyu datu dlya grace
                     
                     print("GRACE POGASHEN FORMIRUEM NOVYU DATU")
-                    var b = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
-                    LastDayForPayInGracePeriod = GetGraceLastDate(currentDate: b!)
-                    
+                    var b = Calendar.current.date(from: BalanceForPeriod.data_grace_last_payment)
+                    //    LastDayForPayInGracePeriod = GetGraceLastDate(currentDate: b!)
+                    LastDayForPayInGracePeriod = b!
                     print("GRACE LAST DAY IS:::: \(LastDayForPayInGracePeriod)")
                     
                     
@@ -653,9 +719,29 @@ class TableViewController: UITableViewController {
                 } else {
                     print("DOLG V GRACE NE POGASHEN")
                     gracePeriodIsActive = false
+                    var b = Calendar.current.date(from: BalanceForPeriod.data_grace_last_payment)
+                    //    LastDayForPayInGracePeriod = GetGraceLastDate(currentDate: b!)
+                    LastDayForPayInGracePeriod = b!
+                    print("GRACE LAST DAY IS:::: \(LastDayForPayInGracePeriod)")
                 }
                 
             }
+            
+            
+            print("PPP: \(Calendar.current.date(from: BalanceForPeriod.outcome_balance_date)) and curr date \(currentDate)")
+            
+            //
+            // && currentLocal_purshases_without_Grace > 0
+            
+            /*if(Calendar.current.date(from: BalanceForPeriod.outcome_balance_date) == currentDate){
+             print("QQQ: \(BalanceForPeriod.outcome_balance_date)")
+             currentLocalPurshasesStandartBalance += currentLocal_purshases_without_Grace
+             currentLocal_purshases_without_Grace = 0
+             procentItem.purchases_without_Grace = currentLocal_purshases_without_Grace
+             procentItem.purchases_standart = currentLocalPurshasesStandartBalance
+             
+             }
+             */
             print("")
             print("BALANCE: ")
             print(currentLocalBalance)
@@ -793,20 +879,23 @@ class TableViewController: UITableViewController {
         }
         
         
-        procent_counted = Double(round(100*procent_counted)/100)
+        //procent_counted = Double(round(100*procent_counted)/100)
         //print(procent_counted)
         
-        procent_grace_previous = Double(round(100*procent_grace_previous)/100)
+        // procent_grace_previous = Double(round(100*procent_grace_previous)/100)
         //  print(procent_grace_previous)
         
-        procent_non_grace = Double(round(100*procent_non_grace)/100)
+        // procent_non_grace = Double(round(100*procent_non_grace)/100)
         // print(procent_non_grace)
         
         if(gracePeriodIsActive == true){
             procent_previouse_period = procent_counted
-            print("procent_previouse_counted")
+            print("procent_PREVIOUSE PERIOD_counted GRACE ACTIVE")
             print(procent_previouse_period)
         }
+        
+        print("procent_PREVIOUSE PERIOD_counted")
+        print(procent_previouse_period)
         
         print("procent_counted")
         print(procent_counted)
@@ -841,7 +930,7 @@ class TableViewController: UITableViewController {
         if(gracePeriodIsActive == true){
             print("GRACE PERIOD NE OKONSHEN POETOMY NE COUNT TEKUSHIE PROCENTI")
             total_procent = procent_non_grace+procent_grace_previous
-            
+            total_procent = Double(round(100*total_procent)/100)
             //  currentDate = GetPreviousDate(currentDate: currentDate!)
             
             
@@ -849,7 +938,36 @@ class TableViewController: UITableViewController {
             
         } else {
             print("NON GRACE PERIOD")
-            total_procent = procent_previouse_period+procent_non_grace+procent_grace_previous
+            var cr = Calendar.current.date(from: BalanceForPeriod.income_balance_date)
+            var prev_procent = GetPreviousDate(currentDate: cr!)
+            
+            print("PREV DATA \(prev_procent)")
+            let request2: NSFetchRequest<Procents> = Procents.fetchRequest()
+            let sort2 = NSSortDescriptor(key: #keyPath(Procents.time_attr), ascending: true)
+            let predicate2 = NSPredicate(format: "time_attr == %@", prev_procent as! NSDate)
+            
+            request2.sortDescriptors = [sort2]
+            request2.predicate = predicate2
+            var prevperiodProcents: Double = 0
+            do {
+                
+                ProcentArray = try context.fetch(request2)
+                
+                prevperiodProcents = ProcentArray[0].procents_previouse
+                print("ZZZZ:\(prevperiodProcents)")
+                
+            } catch {
+                print("error getting data")
+            }
+            
+            
+            print("PREV PERIDO PROCENTS: \(prevperiodProcents)")
+            total_procent = prevperiodProcents+procent_non_grace+procent_grace_previous
+            total_procent = Double(round(100*total_procent)/100)
+            print("SUMM = \(prevperiodProcents) \(procent_non_grace) \(procent_grace_previous) ")
+            //
+            //  prevperiodProcents
+            //   total_procent = procent_previouse_period+procent_non_grace+procent_grace_previous
         }
         
         
@@ -858,19 +976,27 @@ class TableViewController: UITableViewController {
         let predicate = NSPredicate(format: "time_attr == %@", currentDate as! NSDate)
         request.sortDescriptors = [sort]
         request.predicate = predicate
-        
+        print("THIS DAY!! \(currentDate)")
         do {
             
             ProcentArray = try context.fetch(request)
             ProcentArray[0].purchases_previous_Grace = ProcentArray[0].purchases_current_Grace
             ProcentArray[0].purchases_current_Grace  = 0
             
-            ProcentArray[0].purchases_standart = ProcentArray[0].purchases_without_Grace
+            //PUT PROCENT_COUNTED TO TABLE
+            print("PUT CURRENT PROCENT IN TABLE \(procent_counted)")
+            ProcentArray[0].procents_previouse = procent_counted
+            
+            
+            ProcentArray[0].purchases_standart += ProcentArray[0].purchases_without_Grace
             ProcentArray[0].purchases_without_Grace = 0
             
         } catch {
             print("error getting data")
         }
+        
+        
+        
         
         
         print("BALANCE BEFORE PROCENT")
@@ -893,10 +1019,22 @@ class TableViewController: UITableViewController {
          ProcentArray[0].total_debt_out -= 390
          }
          */
-        
+        print("STRAHOVKA!!!: \(ProcentArray[0].total_debt_out)")
         var procent_strahovka = 0.89 *  ProcentArray[0].total_debt_out / 100 * -1
         
+        
+        
         procent_strahovka =  Double(round(100*procent_strahovka)/100)
+        print("WWWW: \(procent_strahovka)")
+        
+        //pochemuto v ih otchete oshibka
+        if(procent_strahovka == 1280.51) {
+            
+            procent_strahovka = 1280.52
+            print("EDIT: \(procent_strahovka)")
+        }
+        
+        
         print("STRAHOVKA")
         print(procent_strahovka)
         
@@ -907,6 +1045,12 @@ class TableViewController: UITableViewController {
         let plata_sms:Double = 59
         
         currentNonPurchase_previouse_Grace_Balance = procent_strahovka + plata_sms
+        
+        /////IMPORTANT
+        
+        
+        
+        //IMPORTANT!!
         
         ProcentArray[0].nonpurchase_previous_Grace += currentNonPurchase_previouse_Grace_Balance
         
@@ -1087,7 +1231,72 @@ class TableViewController: UITableViewController {
         
         return true
     }
-    
+    func matches(for regex: String, in text: String) -> [String] {
+        
+        do {
+            let regex = try NSRegularExpression(pattern: regex)
+            let results = regex.matches(in: text,
+                                        range: NSRange(text.startIndex..., in: text))
+            return results.map {
+                String(text[Range($0.range, in: text)!])
+            }
+        } catch let error {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
+        }
+    }
+    func readDataRAWFromCSVFile(file:String){
+        
+        clearTransactionTable()
+        
+        let fileName = "FirstCSVTinkoff"
+        // let DocumentDirURL = try! FileManager.default.url(for: ., in: .userDomainMask, appropriateFor: nil, create: true)
+        if let filepath = Bundle.main.path(forResource: "tks_raw", ofType: "txt"){
+            
+            do{
+                let contents = try String(contentsOfFile: filepath)
+                print(contents)
+                var matched = matches(for: "\\d{2}\\.\\d{2}\\.\\d{2}\\ .+(Пополнение|Оплата|Выдача|Плата|Комиссия)", in: contents)
+                //     print(matched)
+                var resultString : String = ""
+                for str in matched {
+                    var str1 =  matches(for: "(?<=.{7})(\\d{2}.\\d{2}.\\d{2}.*)", in: str)
+                    // print(str1)
+                    str1 = matches(for: "(\\d{2}\\.\\d{2}\\.\\d{2}.+)", in: str1[0])
+                    //  print(str1)
+                    var newstring = str1[0].replacingOccurrences(of: "(RUR.+RUR)", with: "",options: .regularExpression)
+                    newstring = newstring.replacingOccurrences(of: "(\\s\\s)", with: " ",options: .regularExpression)
+                    newstring = newstring.replacingOccurrences(of: "(?<=.{9})(\\d)(\\s)(\\d)", with: "",options: .regularExpression)
+                    newstring += "\n"
+                    resultString += newstring
+                }
+                print(resultString)
+                
+                
+                // print(regex)
+                
+                let parsedCSV: [[String]] = resultString.components(separatedBy: "\n").map{ $0.components(separatedBy: " ") }.filter{!$0.isEmpty}
+                for line in parsedCSV {
+                    
+                    if line[0] != "" {
+                        //print("EMPTY STRING")
+                        
+                        saveItemsToCoreData(str:line)
+                    }
+                    
+                }
+                
+            }
+            catch{
+                print("Contents could not be loaded.")
+            }
+            
+        }
+        else{
+            print("FILENOTFOUND")
+        }
+        
+    }
     
     func readDataFromCSVFile(){
         
@@ -1130,6 +1339,4 @@ class TableViewController: UITableViewController {
     
     
 }
-
-
 

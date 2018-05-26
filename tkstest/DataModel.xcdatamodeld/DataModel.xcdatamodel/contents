@@ -7,6 +7,7 @@
         <attribute name="percent_previous_Grace" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="percent_without_Grace" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="procents" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="procents_previouse" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="purchases_current_Grace" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="purchases_previous_Grace" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="purchases_standart" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
@@ -21,7 +22,7 @@
         <attribute name="type_attr" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Procents" positionX="-839" positionY="2466" width="128" height="240"/>
+        <element name="Procents" positionX="-839" positionY="2466" width="128" height="255"/>
         <element name="Transaction" positionX="-1827" positionY="2351" width="495" height="90"/>
     </elements>
 </model>
