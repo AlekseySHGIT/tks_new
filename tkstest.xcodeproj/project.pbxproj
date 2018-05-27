@@ -16,6 +16,8 @@
 		847B97652091D768005110E8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 847B97632091D768005110E8 /* LaunchScreen.storyboard */; };
 		847B97722091E4AA005110E8 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 847B97702091E4AA005110E8 /* DataModel.xcdatamodeld */; };
 		848339D220B9818E00D76CA1 /* tks_raw.txt in Resources */ = {isa = PBXBuildFile; fileRef = 848339D120B9818E00D76CA1 /* tks_raw.txt */; };
+		84DA29D120BA8F4D00BF67F5 /* tks_august_2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = 84DA29CF20BA8F4D00BF67F5 /* tks_august_2013.txt */; };
+		84DA29D220BA8F4D00BF67F5 /* tks_july_2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = 84DA29D020BA8F4D00BF67F5 /* tks_july_2013.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		847B97662091D768005110E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		847B97712091E4AA005110E8 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		848339D120B9818E00D76CA1 /* tks_raw.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tks_raw.txt; sourceTree = "<group>"; };
+		84DA29CF20BA8F4D00BF67F5 /* tks_august_2013.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tks_august_2013.txt; sourceTree = SOURCE_ROOT; };
+		84DA29D020BA8F4D00BF67F5 /* tks_july_2013.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tks_july_2013.txt; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +68,8 @@
 			children = (
 				8462C03320935707000A0A56 /* FirstCSVTinkoff.txt */,
 				848339D120B9818E00D76CA1 /* tks_raw.txt */,
+				84DA29CF20BA8F4D00BF67F5 /* tks_august_2013.txt */,
+				84DA29D020BA8F4D00BF67F5 /* tks_july_2013.txt */,
 				847B97572091D764005110E8 /* AppDelegate.swift */,
 				847B97592091D764005110E8 /* TableViewController.swift */,
 				847B97702091E4AA005110E8 /* DataModel.xcdatamodeld */,
@@ -136,6 +142,8 @@
 			files = (
 				847B97652091D768005110E8 /* LaunchScreen.storyboard in Resources */,
 				847B97622091D768005110E8 /* Assets.xcassets in Resources */,
+				84DA29D220BA8F4D00BF67F5 /* tks_july_2013.txt in Resources */,
+				84DA29D120BA8F4D00BF67F5 /* tks_august_2013.txt in Resources */,
 				848339D220B9818E00D76CA1 /* tks_raw.txt in Resources */,
 				847B975D2091D764005110E8 /* Main.storyboard in Resources */,
 				8462C03420935707000A0A56 /* FirstCSVTinkoff.txt in Resources */,

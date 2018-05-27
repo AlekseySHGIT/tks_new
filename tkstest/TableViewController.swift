@@ -9,7 +9,6 @@ import UIKit
 import CoreData
 
 
-
 struct Balance {
     var income_balance:Double = 0.00
     var outgoing_balance = -110562.11
@@ -88,8 +87,11 @@ class TableViewController: UITableViewController {
         print("LAST DATE")
         print(LastDayForPayInGracePeriod)
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        clearTransactionTable()
+        readDataRAWFromCSVFile(file: "tks_july_2013")
+        readDataRAWFromCSVFile(file: "tks_august_2013")
         
-        readDataFromCSVFile()
+        //readDataFromCSVFile()
         loadItemsFromCoreData()
         
     }
@@ -1248,11 +1250,11 @@ class TableViewController: UITableViewController {
     }
     func readDataRAWFromCSVFile(file:String){
         
-        clearTransactionTable()
         
-        let fileName = "FirstCSVTinkoff"
+        
+        
         // let DocumentDirURL = try! FileManager.default.url(for: ., in: .userDomainMask, appropriateFor: nil, create: true)
-        if let filepath = Bundle.main.path(forResource: "tks_raw", ofType: "txt"){
+        if let filepath = Bundle.main.path(forResource: file, ofType: "txt"){
             
             do{
                 let contents = try String(contentsOfFile: filepath)
@@ -1262,12 +1264,18 @@ class TableViewController: UITableViewController {
                 var resultString : String = ""
                 for str in matched {
                     var str1 =  matches(for: "(?<=.{7})(\\d{2}.\\d{2}.\\d{2}.*)", in: str)
-                    // print(str1)
+                    print("UUU: \(str1)")
+                    
                     str1 = matches(for: "(\\d{2}\\.\\d{2}\\.\\d{2}.+)", in: str1[0])
-                    //  print(str1)
+                    
+                    
+                    print(str1)
                     var newstring = str1[0].replacingOccurrences(of: "(RUR.+RUR)", with: "",options: .regularExpression)
+                    print(newstring)
                     newstring = newstring.replacingOccurrences(of: "(\\s\\s)", with: " ",options: .regularExpression)
-                    newstring = newstring.replacingOccurrences(of: "(?<=.{9})(\\d)(\\s)(\\d)", with: "",options: .regularExpression)
+                    print(newstring)
+                    newstring = newstring.replacingOccurrences(of: "(?<=.{9})((?<=\\d) (?=\\d))", with: "",options: .regularExpression)
+                    print(newstring)
                     newstring += "\n"
                     resultString += newstring
                 }
@@ -1281,7 +1289,7 @@ class TableViewController: UITableViewController {
                     
                     if line[0] != "" {
                         //print("EMPTY STRING")
-                        
+                        print("LINE: \(line)")
                         saveItemsToCoreData(str:line)
                     }
                     
@@ -1314,16 +1322,19 @@ class TableViewController: UITableViewController {
                     
                     if line[0] != "" {
                         //print("EMPTY STRING")
-                        
+                        print("LINE: \(line)")
                         saveItemsToCoreData(str:line)
                     }
                     
                 }
                 
+                
+                
             }
             catch{
                 print("Contents could not be loaded.")
             }
+            
             
         }
         else{
@@ -1340,4 +1351,6 @@ class TableViewController: UITableViewController {
     
     
 }
+
+
 
