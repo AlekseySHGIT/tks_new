@@ -9,6 +9,7 @@ import UIKit
 import CoreData
 
 
+
 struct Balance {
     var income_balance:Double = 0.00
     var outgoing_balance = -110562.11
