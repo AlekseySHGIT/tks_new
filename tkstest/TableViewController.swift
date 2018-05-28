@@ -101,6 +101,7 @@ class TableViewController: UITableViewController {
         return ProcentArray.count
     }
     
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Item",for:indexPath)
         //let item = TransactionsArray[indexPath.row]

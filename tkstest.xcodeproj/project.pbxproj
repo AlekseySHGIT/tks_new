@@ -68,8 +68,8 @@
 			children = (
 				8462C03320935707000A0A56 /* FirstCSVTinkoff.txt */,
 				848339D120B9818E00D76CA1 /* tks_raw.txt */,
-				84DA29CF20BA8F4D00BF67F5 /* tks_august_2013.txt */,
 				84DA29D020BA8F4D00BF67F5 /* tks_july_2013.txt */,
+				84DA29CF20BA8F4D00BF67F5 /* tks_august_2013.txt */,
 				847B97572091D764005110E8 /* AppDelegate.swift */,
 				847B97592091D764005110E8 /* TableViewController.swift */,
 				847B97702091E4AA005110E8 /* DataModel.xcdatamodeld */,
