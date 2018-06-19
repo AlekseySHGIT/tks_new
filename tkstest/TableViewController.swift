@@ -17,7 +17,7 @@ struct Balance {
     var income_ammount = 15000.00
     var credit_limit:Double = 120000.00
     var service_charge:Double = 590
-    var data_min_payment = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 19)
+    
     var data_fist_payment = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20)
     var data_grace_last_payment = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20)
     //сумма расходов
@@ -49,7 +49,6 @@ class TableViewController: UITableViewController {
             income_ammount: 0,
             credit_limit: 120000.00,
             service_charge: 590,
-            data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 18),
             data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
             data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 09, day: 20),
             amount_of_expenses: 0,
@@ -158,7 +157,6 @@ class TableViewController: UITableViewController {
                 income_ammount: 0,
                 credit_limit: 120000.00,
                 service_charge: 590,
-                data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 08, day: 18),
                 data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
                 data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 10, day: 21),
                 amount_of_expenses: 0,
@@ -182,7 +180,6 @@ class TableViewController: UITableViewController {
                 income_ammount: 0,
                 credit_limit: 120000.00,
                 service_charge: 590,
-                data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 08, day: 18),
                 data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
                 data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 11, day: 20),
                 amount_of_expenses: 0,
@@ -196,7 +193,7 @@ class TableViewController: UITableViewController {
             CalculateProcents()
             
             
-            
+            /*
             
             //PROSHET ZA SLED MESYATS
             print("\nNEXT MONTH  NOVEMBER\n")
@@ -207,7 +204,6 @@ class TableViewController: UITableViewController {
                 income_ammount: 0,
                 credit_limit: 120000.00,
                 service_charge: 590,
-                data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 11, day: 20),
                 data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
                 data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 12, day: 21),
                 amount_of_expenses: 0,
@@ -228,7 +224,6 @@ class TableViewController: UITableViewController {
                 income_ammount: 0,
                 credit_limit: 120000.00,
                 service_charge: 590,
-                data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 12, day: 21),
                 data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
                 data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 01, day: 20),
                 amount_of_expenses: 0,
@@ -248,7 +243,6 @@ class TableViewController: UITableViewController {
                 income_ammount: 0,
                 credit_limit: 120000.00,
                 service_charge: 590,
-                data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 01, day: 20),
                 data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
                 data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 02, day: 20),
                 amount_of_expenses: 0,
@@ -268,7 +262,6 @@ class TableViewController: UITableViewController {
                 income_ammount: 0,
                 credit_limit: 120000.00,
                 service_charge: 590,
-                data_min_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 02, day: 18),
                 data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
                 data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 03, day: 20),
                 amount_of_expenses: 0,
@@ -276,7 +269,7 @@ class TableViewController: UITableViewController {
             
             FillProcentTableWithData()
             CalculateProcents()
-            
+            */
             
             
             let request: NSFetchRequest<Procents> = Procents.fetchRequest()
