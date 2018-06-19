@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		844D3D1D20D90F160079E10E /* tks_september_2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = 844D3D1C20D90D890079E10E /* tks_september_2013.txt */; };
 		8462C03420935707000A0A56 /* FirstCSVTinkoff.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8462C03320935707000A0A56 /* FirstCSVTinkoff.txt */; };
 		847B97582091D764005110E8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847B97572091D764005110E8 /* AppDelegate.swift */; };
 		847B975A2091D764005110E8 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847B97592091D764005110E8 /* TableViewController.swift */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		844D3D1C20D90D890079E10E /* tks_september_2013.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = tks_september_2013.txt; sourceTree = "<group>"; };
 		8462C03320935707000A0A56 /* FirstCSVTinkoff.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FirstCSVTinkoff.txt; sourceTree = SOURCE_ROOT; };
 		847B97542091D764005110E8 /* tkstest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tkstest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		847B97572091D764005110E8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 				848339D120B9818E00D76CA1 /* tks_raw.txt */,
 				84DA29D020BA8F4D00BF67F5 /* tks_july_2013.txt */,
 				84DA29CF20BA8F4D00BF67F5 /* tks_august_2013.txt */,
+				844D3D1C20D90D890079E10E /* tks_september_2013.txt */,
 				847B97572091D764005110E8 /* AppDelegate.swift */,
 				847B97592091D764005110E8 /* TableViewController.swift */,
 				847B97702091E4AA005110E8 /* DataModel.xcdatamodeld */,
@@ -140,6 +143,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				844D3D1D20D90F160079E10E /* tks_september_2013.txt in Resources */,
 				847B97652091D768005110E8 /* LaunchScreen.storyboard in Resources */,
 				847B97622091D768005110E8 /* Assets.xcassets in Resources */,
 				84DA29D220BA8F4D00BF67F5 /* tks_july_2013.txt in Resources */,

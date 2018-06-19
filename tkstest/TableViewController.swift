@@ -87,10 +87,10 @@ class TableViewController: UITableViewController {
         print(LastDayForPayInGracePeriod)
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         clearTransactionTable()
-        readDataRAWFromCSVFile(file: "tks_july_2013")
+       readDataRAWFromCSVFile(file: "tks_july_2013")
         readDataRAWFromCSVFile(file: "tks_august_2013")
-        
-        //readDataFromCSVFile()
+         readDataRAWFromCSVFile(file: "tks_september_2013")
+       // readDataFromCSVFile()
         loadItemsFromCoreData()
         
     }
@@ -172,7 +172,8 @@ class TableViewController: UITableViewController {
             
             
             //PROSHET ZA SLED MESYATS
-            print("\nNEXT MONTH 3\n")
+         
+            print("\nMONTH 25 september - 24 october 2013\n")
             BalanceForPeriod = Balance(
                 income_balance: -122655.30, outgoing_balance: -124768.00,
                 income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 09, day: 25),
@@ -1255,23 +1256,23 @@ class TableViewController: UITableViewController {
             do{
                 let contents = try String(contentsOfFile: filepath)
                 print(contents)
-                var matched = matches(for: "\\d{2}\\.\\d{2}\\.\\d{2}\\ .+(Пополнение|Оплата|Выдача|Плата|Комиссия)", in: contents)
+                var matched = matches(for: "\\d{2}\\.\\d{2}\\.\\d{2}\\ .+(Пополнение|Оплата|Выдача|Плата|Комиссия|Перевод)", in: contents)
                 //     print(matched)
                 var resultString : String = ""
                 for str in matched {
                     var str1 =  matches(for: "(?<=.{7})(\\d{2}.\\d{2}.\\d{2}.*)", in: str)
-                    print("UUU: \(str1)")
+                   // print("UUU: \(str1)")
                     
                     str1 = matches(for: "(\\d{2}\\.\\d{2}\\.\\d{2}.+)", in: str1[0])
                     
                     
-                    print(str1)
+                 //   print(str1)
                     var newstring = str1[0].replacingOccurrences(of: "(RUR.+RUR)", with: "",options: .regularExpression)
-                    print(newstring)
+                  //  print(newstring)
                     newstring = newstring.replacingOccurrences(of: "(\\s\\s)", with: " ",options: .regularExpression)
-                    print(newstring)
+                  //  print(newstring)
                     newstring = newstring.replacingOccurrences(of: "(?<=.{9})((?<=\\d) (?=\\d))", with: "",options: .regularExpression)
-                    print(newstring)
+                 //  print(newstring)
                     newstring += "\n"
                     resultString += newstring
                 }
