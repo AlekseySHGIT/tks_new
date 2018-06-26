@@ -73,7 +73,7 @@ class TableViewController: UITableViewController {
             // BalanceForPeriod.outcome_balance_date = DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 08, day: 24)
             //грейс смещается
             // may be in 30 dnay a bryat dlya mesatsa
-            var oneMonthAgo = thisDayOneMonthEarlier(currentDate: Calendar.current.date(from: BalanceForPeriod.outcome_balance_date)!, value: -1)
+            let oneMonthAgo = thisDayOneMonthEarlier(currentDate: Calendar.current.date(from: BalanceForPeriod.outcome_balance_date)!, value: -1)
             print("AAAAA")
             print(oneMonthAgo)
             LastDayForPayInGracePeriod = GetGraceLastDate(currentDate: oneMonthAgo)
@@ -87,10 +87,20 @@ class TableViewController: UITableViewController {
         print(LastDayForPayInGracePeriod)
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         clearTransactionTable()
-       readDataRAWFromCSVFile(file: "tks_july_2013")
-        readDataRAWFromCSVFile(file: "tks_august_2013")
-         readDataRAWFromCSVFile(file: "tks_september_2013")
-       // readDataFromCSVFile()
+        readDataRAWFromCSVFile(file: "tks-17.07-24.08-2013")
+        readDataRAWFromCSVFile(file: "tks-25.08-24.09-2013")
+        readDataRAWFromCSVFile(file: "tks-25.09-24.10-2013")
+        readDataRAWFromCSVFile(file: "tks-25.10-24.11-2013")
+        readDataRAWFromCSVFile(file: "tks-25.11-24.12-2013")
+        readDataRAWFromCSVFile(file: "tks-25.12-24.01-2014")
+        readDataRAWFromCSVFile(file: "tks-25.01-24.02-2014")
+        readDataRAWFromCSVFile(file: "tks-25.02-24.03-2014")
+         readDataRAWFromCSVFile(file: "tks-25.03-24.04-2014")
+        
+        
+        
+        
+        // readDataFromCSVFile()
         loadItemsFromCoreData()
         
     }
@@ -107,7 +117,7 @@ class TableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Item",for:indexPath)
         //let item = TransactionsArray[indexPath.row]
         let item = ProcentArray[indexPath.row]
-        let date = NSDate()
+        _ = NSDate()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateString = dateFormatter.string(from:item.time_attr as! Date)
@@ -173,7 +183,7 @@ class TableViewController: UITableViewController {
             
             //PROSHET ZA SLED MESYATS
          
-            print("\nMONTH 25 september - 24 october 2013\n")
+            print("\nMONTH 25 09 - 24 10 2013\n")
             BalanceForPeriod = Balance(
                 income_balance: -122655.30, outgoing_balance: -124768.00,
                 income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 09, day: 25),
@@ -194,10 +204,9 @@ class TableViewController: UITableViewController {
             CalculateProcents()
             
             
-            /*
             
             //PROSHET ZA SLED MESYATS
-            print("\nNEXT MONTH  NOVEMBER\n")
+            print("\n  tks-25.10-24.11-2013 \n")
             BalanceForPeriod = Balance(
                 income_balance: -124768.00, outgoing_balance: -124461.69,
                 income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 10, day: 25),
@@ -206,12 +215,105 @@ class TableViewController: UITableViewController {
                 credit_limit: 120000.00,
                 service_charge: 590,
                 data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
-                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 12, day: 21),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 12, day: 19),
                 amount_of_expenses: 0,
                 amount_of_receipts: 0)
             
             FillProcentTableWithData()
             CalculateProcents()
+            
+            
+            
+            print("\n  tks-25.11-24.12-2013 \n")
+            BalanceForPeriod = Balance(
+                income_balance: -124461.69, outgoing_balance: 0,
+                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 11, day: 25),
+                outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 12, day: 24),
+                income_ammount: 0,
+                credit_limit: 140000.00,
+                service_charge: 590,
+                data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 01, day: 18),
+                amount_of_expenses: 0,
+                amount_of_receipts: 0)
+            
+            FillProcentTableWithData()
+            CalculateProcents()
+            
+            
+            
+            print("\n  tks-25.12-24.01-2014 \n")
+            BalanceForPeriod = Balance(
+                income_balance: -145158.58, outgoing_balance: 0,
+                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2013, month: 12, day: 25),
+                outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 01, day: 24),
+                income_ammount: 0,
+                credit_limit: 140000.00,
+                service_charge: 590,
+                data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 02, day: 18),
+                amount_of_expenses: 0,
+                amount_of_receipts: 0)
+            
+            FillProcentTableWithData()
+            CalculateProcents()
+            
+            
+            print("\n  tks-25.01-24.02-2014 \n")
+            BalanceForPeriod = Balance(
+                income_balance: -144644.22, outgoing_balance: 0,
+                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2014, month: 01, day: 25),
+                outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 02, day: 24),
+                income_ammount: 0,
+                credit_limit: 140000.00,
+                service_charge: 590,
+                data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 03, day: 21),
+                amount_of_expenses: 0,
+                amount_of_receipts: 0)
+            
+            FillProcentTableWithData()
+            CalculateProcents()
+            
+            print("\n  tks-25.02-24.03-2014 \n")
+            BalanceForPeriod = Balance(
+                income_balance: -142089.56, outgoing_balance: 0,
+                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2014, month: 02, day: 25),
+                outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 03, day: 24),
+                income_ammount: 0,
+                credit_limit: 140000.00,
+                service_charge: 590,
+                data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 04, day: 18),
+                amount_of_expenses: 0,
+                amount_of_receipts: 0)
+            
+            FillProcentTableWithData()
+            CalculateProcents()
+            
+            
+            print("\n  tks-25.03-24.04-2014 \n")
+            BalanceForPeriod = Balance(
+                income_balance: -147778.97, outgoing_balance: 0,
+                income_balance_date: DateComponents(timeZone: TimeZone.init(abbreviation: "UTC") ,year: 2014, month: 03, day: 25),
+                outcome_balance_date: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 04, day: 24),
+                income_ammount: 0,
+                credit_limit: 140000.00,
+                service_charge: 590,
+                data_fist_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2013, month: 07, day: 20),
+                data_grace_last_payment: DateComponents(timeZone:TimeZone.init(abbreviation: "UTC"), year: 2014, month: 05, day: 19),
+                amount_of_expenses: 0,
+                amount_of_receipts: 0)
+            
+            FillProcentTableWithData()
+            CalculateProcents()
+            
+            
+            
+            
+            /*
+            
+           
             
             
             
@@ -402,7 +504,7 @@ class TableViewController: UITableViewController {
             procentItem.time_attr = currentDate
             
             let requestSearch: NSFetchRequest <Transaction> = Transaction.fetchRequest()
-            let predicate = NSPredicate(format: "time_attr == %@", currentDate as! NSDate)
+            let predicate = NSPredicate(format: "time_attr == %@", currentDate as NSDate)
             
             requestSearch.predicate = predicate
             var transactionsFoundForThisDate = [Transaction]()
@@ -450,7 +552,7 @@ class TableViewController: UITableViewController {
                         
                         
                         
-                    case "Пополнение":
+                    case "Пополнение","Отмена","Возврат":
                         
                         
                         if(!firstPopolnenie){
@@ -944,7 +1046,7 @@ class TableViewController: UITableViewController {
             print("PREV DATA \(prev_procent)")
             let request2: NSFetchRequest<Procents> = Procents.fetchRequest()
             let sort2 = NSSortDescriptor(key: #keyPath(Procents.time_attr), ascending: true)
-            let predicate2 = NSPredicate(format: "time_attr == %@", prev_procent as! NSDate)
+            let predicate2 = NSPredicate(format: "time_attr == %@", prev_procent as NSDate)
             
             request2.sortDescriptors = [sort2]
             request2.predicate = predicate2
@@ -1256,7 +1358,7 @@ class TableViewController: UITableViewController {
             do{
                 let contents = try String(contentsOfFile: filepath)
                 print(contents)
-                var matched = matches(for: "\\d{2}\\.\\d{2}\\.\\d{2}\\ .+(Пополнение|Оплата|Выдача|Плата|Комиссия|Перевод)", in: contents)
+                var matched = matches(for: "\\d{2}\\.\\d{2}\\.\\d{2}\\ .+(Пополнение|Оплата|Выдача|Плата|Комиссия|Перевод|Отмена|Возврат)", in: contents)
                 //     print(matched)
                 var resultString : String = ""
                 for str in matched {

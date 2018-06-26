@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		844D3D1D20D90F160079E10E /* tks_september_2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = 844D3D1C20D90D890079E10E /* tks_september_2013.txt */; };
+		844D3D1D20D90F160079E10E /* tks-25.09-24.10-2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = 844D3D1C20D90D890079E10E /* tks-25.09-24.10-2013.txt */; };
 		8462C03420935707000A0A56 /* FirstCSVTinkoff.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8462C03320935707000A0A56 /* FirstCSVTinkoff.txt */; };
 		847B97582091D764005110E8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847B97572091D764005110E8 /* AppDelegate.swift */; };
 		847B975A2091D764005110E8 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847B97592091D764005110E8 /* TableViewController.swift */; };
@@ -17,12 +17,18 @@
 		847B97652091D768005110E8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 847B97632091D768005110E8 /* LaunchScreen.storyboard */; };
 		847B97722091E4AA005110E8 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 847B97702091E4AA005110E8 /* DataModel.xcdatamodeld */; };
 		848339D220B9818E00D76CA1 /* tks_raw.txt in Resources */ = {isa = PBXBuildFile; fileRef = 848339D120B9818E00D76CA1 /* tks_raw.txt */; };
-		84DA29D120BA8F4D00BF67F5 /* tks_august_2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = 84DA29CF20BA8F4D00BF67F5 /* tks_august_2013.txt */; };
-		84DA29D220BA8F4D00BF67F5 /* tks_july_2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = 84DA29D020BA8F4D00BF67F5 /* tks_july_2013.txt */; };
+		FAD4D22A20DFC50F0066C238 /* tks-25.08-24.09-2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = FAD4D22820DFC50F0066C238 /* tks-25.08-24.09-2013.txt */; };
+		FAD4D22B20DFC50F0066C238 /* tks-17.07-24.08-2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = FAD4D22920DFC50F0066C238 /* tks-17.07-24.08-2013.txt */; };
+		FAD4D22C20DFC81B0066C238 /* tks-25.10-24.11-2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = FAD4D22620DFC3AD0066C238 /* tks-25.10-24.11-2013.txt */; };
+		FAD4D22E20DFCC2B0066C238 /* tks-25.11-24.12-2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = FAD4D22D20DFCA970066C238 /* tks-25.11-24.12-2013.txt */; };
+		FAD4D23020DFCE230066C238 /* tks-25.12-24.01-2014.txt in Resources */ = {isa = PBXBuildFile; fileRef = FAD4D22F20DFCDCA0066C238 /* tks-25.12-24.01-2014.txt */; };
+		FAD4D23220DFD0130066C238 /* tks-25.01-24.02-2014.txt in Resources */ = {isa = PBXBuildFile; fileRef = FAD4D23120DFCF6E0066C238 /* tks-25.01-24.02-2014.txt */; };
+		FAD4D23420DFD0810066C238 /* tks-25.02-24.03-2014.txt in Resources */ = {isa = PBXBuildFile; fileRef = FAD4D23320DFD0350066C238 /* tks-25.02-24.03-2014.txt */; };
+		FAD4D23620DFD1170066C238 /* tks-25.03-24.04-2014.txt in Resources */ = {isa = PBXBuildFile; fileRef = FAD4D23520DFD0EB0066C238 /* tks-25.03-24.04-2014.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		844D3D1C20D90D890079E10E /* tks_september_2013.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = tks_september_2013.txt; sourceTree = "<group>"; };
+		844D3D1C20D90D890079E10E /* tks-25.09-24.10-2013.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tks-25.09-24.10-2013.txt"; sourceTree = "<group>"; };
 		8462C03320935707000A0A56 /* FirstCSVTinkoff.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FirstCSVTinkoff.txt; sourceTree = SOURCE_ROOT; };
 		847B97542091D764005110E8 /* tkstest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tkstest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		847B97572091D764005110E8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -34,8 +40,14 @@
 		847B97662091D768005110E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		847B97712091E4AA005110E8 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		848339D120B9818E00D76CA1 /* tks_raw.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tks_raw.txt; sourceTree = "<group>"; };
-		84DA29CF20BA8F4D00BF67F5 /* tks_august_2013.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tks_august_2013.txt; sourceTree = SOURCE_ROOT; };
-		84DA29D020BA8F4D00BF67F5 /* tks_july_2013.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tks_july_2013.txt; sourceTree = SOURCE_ROOT; };
+		FAD4D22620DFC3AD0066C238 /* tks-25.10-24.11-2013.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tks-25.10-24.11-2013.txt"; sourceTree = "<group>"; };
+		FAD4D22820DFC50F0066C238 /* tks-25.08-24.09-2013.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "tks-25.08-24.09-2013.txt"; sourceTree = "<group>"; };
+		FAD4D22920DFC50F0066C238 /* tks-17.07-24.08-2013.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "tks-17.07-24.08-2013.txt"; sourceTree = "<group>"; };
+		FAD4D22D20DFCA970066C238 /* tks-25.11-24.12-2013.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tks-25.11-24.12-2013.txt"; sourceTree = "<group>"; };
+		FAD4D22F20DFCDCA0066C238 /* tks-25.12-24.01-2014.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tks-25.12-24.01-2014.txt"; sourceTree = "<group>"; };
+		FAD4D23120DFCF6E0066C238 /* tks-25.01-24.02-2014.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tks-25.01-24.02-2014.txt"; sourceTree = "<group>"; };
+		FAD4D23320DFD0350066C238 /* tks-25.02-24.03-2014.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tks-25.02-24.03-2014.txt"; sourceTree = "<group>"; };
+		FAD4D23520DFD0EB0066C238 /* tks-25.03-24.04-2014.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tks-25.03-24.04-2014.txt"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,11 +80,9 @@
 		847B97562091D764005110E8 /* tkstest */ = {
 			isa = PBXGroup;
 			children = (
+				FAD4D22720DFC3F10066C238 /* Reports */,
 				8462C03320935707000A0A56 /* FirstCSVTinkoff.txt */,
 				848339D120B9818E00D76CA1 /* tks_raw.txt */,
-				84DA29D020BA8F4D00BF67F5 /* tks_july_2013.txt */,
-				84DA29CF20BA8F4D00BF67F5 /* tks_august_2013.txt */,
-				844D3D1C20D90D890079E10E /* tks_september_2013.txt */,
 				847B97572091D764005110E8 /* AppDelegate.swift */,
 				847B97592091D764005110E8 /* TableViewController.swift */,
 				847B97702091E4AA005110E8 /* DataModel.xcdatamodeld */,
@@ -83,6 +93,22 @@
 				847B975E2091D764005110E8 /* tkstest.xcdatamodeld */,
 			);
 			path = tkstest;
+			sourceTree = "<group>";
+		};
+		FAD4D22720DFC3F10066C238 /* Reports */ = {
+			isa = PBXGroup;
+			children = (
+				FAD4D22920DFC50F0066C238 /* tks-17.07-24.08-2013.txt */,
+				FAD4D22820DFC50F0066C238 /* tks-25.08-24.09-2013.txt */,
+				844D3D1C20D90D890079E10E /* tks-25.09-24.10-2013.txt */,
+				FAD4D22620DFC3AD0066C238 /* tks-25.10-24.11-2013.txt */,
+				FAD4D22D20DFCA970066C238 /* tks-25.11-24.12-2013.txt */,
+				FAD4D22F20DFCDCA0066C238 /* tks-25.12-24.01-2014.txt */,
+				FAD4D23120DFCF6E0066C238 /* tks-25.01-24.02-2014.txt */,
+				FAD4D23320DFD0350066C238 /* tks-25.02-24.03-2014.txt */,
+				FAD4D23520DFD0EB0066C238 /* tks-25.03-24.04-2014.txt */,
+			);
+			path = Reports;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,6 +143,7 @@
 				TargetAttributes = {
 					847B97532091D764005110E8 = {
 						CreatedOnToolsVersion = 9.4;
+						LastSwiftMigration = 1000;
 					};
 				};
 			};
@@ -143,13 +170,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				844D3D1D20D90F160079E10E /* tks_september_2013.txt in Resources */,
+				FAD4D23620DFD1170066C238 /* tks-25.03-24.04-2014.txt in Resources */,
+				FAD4D23420DFD0810066C238 /* tks-25.02-24.03-2014.txt in Resources */,
+				FAD4D23220DFD0130066C238 /* tks-25.01-24.02-2014.txt in Resources */,
+				FAD4D23020DFCE230066C238 /* tks-25.12-24.01-2014.txt in Resources */,
+				FAD4D22E20DFCC2B0066C238 /* tks-25.11-24.12-2013.txt in Resources */,
+				FAD4D22C20DFC81B0066C238 /* tks-25.10-24.11-2013.txt in Resources */,
+				844D3D1D20D90F160079E10E /* tks-25.09-24.10-2013.txt in Resources */,
+				FAD4D22A20DFC50F0066C238 /* tks-25.08-24.09-2013.txt in Resources */,
 				847B97652091D768005110E8 /* LaunchScreen.storyboard in Resources */,
 				847B97622091D768005110E8 /* Assets.xcassets in Resources */,
-				84DA29D220BA8F4D00BF67F5 /* tks_july_2013.txt in Resources */,
-				84DA29D120BA8F4D00BF67F5 /* tks_august_2013.txt in Resources */,
 				848339D220B9818E00D76CA1 /* tks_raw.txt in Resources */,
 				847B975D2091D764005110E8 /* Main.storyboard in Resources */,
+				FAD4D22B20DFC50F0066C238 /* tks-17.07-24.08-2013.txt in Resources */,
 				8462C03420935707000A0A56 /* FirstCSVTinkoff.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -317,7 +350,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Alex.tkstest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -335,7 +368,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Alex.tkstest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
